@@ -1,0 +1,62 @@
+<!-- Waves Effect Css -->
+
+<section class="content">
+    <div class="container-fluid">
+
+        <!-- Exportable Table -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <hr>
+
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            All Users
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                <thead>
+                                    <tr>
+                                        <th>Username</th>
+                                        <th>Email</th>
+
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {{#each users}}
+                                    <tr>
+                                        {{!-- <td>
+                                             {{#if this.path}}
+                                                <img style="height:30px; width:30px" class="img-responsive thumbnail" src="/uploads/{{this.path}}">
+                                               {{else}}
+
+                                                 <img style="height:30px; width:30px" class="img-responsive thumbnail" src="/cancel.png">
+                                             {{/if}}
+                                           </td> --}}
+                                        <td>{{this.username}}</td>
+                                        <td>{{this.email}}</td>
+
+
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+
+                            </table>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+        <!-- #END# Exportable Table -->
+    </div>
+</section>
+
+<!-- Jquery DataTable Plugin Js -->

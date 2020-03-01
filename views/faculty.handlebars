@@ -1,0 +1,108 @@
+<title>Scotiaworld | Faculties</title>
+<div class="course">
+	<div class="container">
+		<div style="text-align: center;" class="row">
+			<img src="/main_theme/images/banner-top.jpg" class="img-responsive" alt="banner-top" title="banner-top">
+			<div class="container">
+				<div class="matter">
+					<h2>{{#if school.path}}
+						<img class="img-circle" src="/uploads/{{school.path}}" style="height:100px; width:100px" />
+						{{else}}
+						<img class="img-circle" src="/noLogo.png" style="height:100px; width:100px" />
+						{{/if}}
+						All Faculties in <strong><span style="">{{school.name}}</span></strong></h2>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- bread-crumb end here -->
+
+<!-- coures start here -->
+<div class="coures">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-3 col-md-3 hidden-sm  hidden-xs">
+				<div class="left">
+					<h4>{{best}}</h4>
+					<div class="popular">
+						{{#each data }}
+						<a href="/detail/{{this.Institution.name}}/{{this.name}}/{{this.id}}">
+							<div class="box">
+								<img style="height:150px" width="100%" src="/uploads/{{this.path}}"
+									class="img-thumbnail" alt="img" title="img" />
+								<p><strong>{{this.Institution.name}}</strong></p>
+								<p>{{this.name}}</p>
+								<span>{{this.fee}}</span>
+							</div>
+						</a>
+						{{/each}}
+						<hr>
+						<h5 style="text-align: center;"><a href="/popular-Courses">View more ...</a></h5>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 mainpage">
+
+
+
+				<div id="course" class="row">
+
+					<hr>
+					<ul class="list-group">
+						<li class="list-group-item active">ALL COURSES UNDER THE SCHOOL OF
+							<strong>{{school.name}}</strong>
+						</li>
+
+						<li class="list-group-item">
+							<div class="table-responsive">
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th scope="col">Course</th>
+											<th scope="col">Degree</th>
+											<th scope="col">Fee</th>
+											<th scope="col"></th>
+										</tr>
+									</thead>
+									<tbody>
+										{{#each courses}}
+										<tr>
+											<th scope="row"><a
+													href="/detail/{{this.Institution.name}}/{{this.name}}/{{this.id}}">{{this.name}}</a>
+											</th>
+											<td>{{this.DegreeType.name}}</td>
+											<td>{{this.fee}}</td>
+											<td><a href="/user/login" class="btn btn-primary">Apply Now</a></td>
+										</tr>
+										{{/each}}
+									</tbody>
+								</table>
+							</div>
+
+						</li>
+
+
+					</ul>
+				</div>
+
+				<!--Courses list ends here-->
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(document).ready(function () {
+		var text = $("#edit").val();
+		$("#about").html(text);
+		$(document).ready(function () {
+			// Handler for .ready() called.
+			$('html, body').animate({
+				scrollTop: $('#course').offset().top
+			}, 'slow');
+
+		});
+	});
+</script>
+
+<!-- coures end here -->

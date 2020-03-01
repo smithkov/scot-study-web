@@ -1,0 +1,340 @@
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>{{entity.name}} UPDATE FORM</h2>
+        </div>
+        <!-- Vertical Layout -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="body">
+                        {{#if entity.basic}}
+                        <form method="post" action="{{entity.url}}update">
+                            <label for="password">Name</label>
+                            <input type="hidden" value="{{data.id}}" name="id" id="text" class="form-control">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input required type="text" value="{{data.name}}" name="name" id="text"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary m-t-15 waves-effect">UPDATE</button>
+                        </form>
+                        {{/if}}
+                        {{#if entity.richText}}
+                        <form method="post" action="{{entity.url}}update">
+                            <label for="password">Name</label>
+                            <input type="hidden" value="{{data.id}}" name="id" id="text" class="form-control">
+                            <div class="form-line">
+                                <textarea rows="4" class="form-control no-resize richText" name="name"
+                                    placeholder="Enter about">{{data.name}}</textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary m-t-15 waves-effect">UPDATE</button>
+                        </form>
+                        {{/if}}
+                        {{#if entity.degreeType}}
+                        <form method="post" action="{{entity.url}}update">
+                            <label for="password">Name</label>
+                            <input type="hidden" value="{{data.id}}" name="id" id="text" class="form-control">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input required type="text" value="{{data.name}}" name="name" id="text"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-line">
+                                <textarea rows="4" class="form-control no-resize richText" name="requirements"
+                                    placeholder="Enter about">{{data.requirements}}
+                                </textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary m-t-15 waves-effect">UPDATE</button>
+                        </form>
+                        {{/if}}
+                        {{#if entity.studyArea}}
+                        <form method="post" action="{{entity.url}}update">
+                            <label for="password">Name</label>
+                            <input type="hidden" value="{{data.id}}" name="id" id="text" class="form-control">
+                            <!-- <div class="form-group">
+                                       <select required name="institution" class="form-control">
+                                          <option value="">{{data.institution.name}}</option>
+                                           {{#each institution}}
+                                             <option value="{{this._id}}">{{this.name}}</option>
+                                           {{/each}}
+                                       </select>
+                                   </div> -->
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input required type="text" value="{{data.name}}" name="name" id="text"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary m-t-15 waves-effect">UPDATE</button>
+                        </form>
+                        {{/if}}
+                        {{#if entity.facultyImage}}
+
+                        {{#if success_msg}}
+                        <hr>
+                        <div class="alert alert-success">{{success_msg}} <a class="pull-right" style="color: white"
+                                href="/facultyImage/listing"> View image list</a></div>
+                        {{/if}}
+
+
+                        <form method="post" enctype="multipart/form-data" action="{{entity.url}}update">
+                            <div class="form-group">
+                                <input name="path" value="{{data.path}}" type="hidden" />
+                                <input name="id" value="{{data.id}}" type="hidden" />
+                                <input name="name" value="{{data.name}}" type="hidden" />
+                                <select required name="studyAreaId" class="form-control">
+                                    <option value="{{data.StudyArea.id}}">{{data.StudyArea.name}}</option>
+                                    <option value="">-- Please select Faculty --</option>
+                                    {{#each studyArea}}
+                                    <option value="{{this.id}}">{{this.name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="col-lg-6">
+                                        <label for="password">Upload faculty related image</label>
+                                        <div class="form-group">
+                                            <input class="form-control" type="file" name="file"></input>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <img style="width: 100px; heigth:100px" class="thumbnail"
+                                            src="/uploads/{{data.path}}" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary m-t-15 waves-effect">SAVE</button>
+                        </form>
+                        {{/if}}
+                        {{#if entity.institution}}
+                        <form enctype="multipart/form-data" method="post" action="{{entity.url}}update">
+                            {{#if data.path}}
+                            <a href="" data-sub-html="Demo Description">
+                                <img style="height:50px; width:50px" class="img-responsive thumbnail"
+                                    src="/uploads/{{data.path}}">
+                            </a>
+                            {{/if}}
+                            {{#if data.banner}}
+                            <a href="" data-sub-html="Demo Description">
+                                <img style="height:50px; width:50px" class="img-responsive thumbnail"
+                                    src="/uploads/{{data.banner}}">
+                            </a>
+                            {{/if}}
+                            <input name="oldLogoImg" value="{{data.path}}" type="hidden" />
+                            <input name="oldBannerImg" value="{{data.banner}}" type="hidden" />
+                            <hr>
+                            <input type="hidden" value="{{data.id}}" name="id" id="text">
+                            <label for="password">Name</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input required type="text" value="{{data.name}}" name="name" id="text"
+                                        class="form-control" placeholder="Enter name">
+                                </div>
+                            </div>
+                            <label for="password">About</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <textarea rows="4" class="form-control no-resize richText" name="about"
+                                        placeholder="Enter about">{{data.about}}</textarea>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+
+
+                                <div class="form-group">
+                                    <select required name="city" class="form-control">
+                                        <option value="{{data.City.id}}">{{data.City.name}}</option>
+                                        {{#each city}}
+                                        <option value="{{this.id}}">{{this.name}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+                                <hr>
+                                <label for="password">Logo</label>
+                                <div class="form-group">
+                                    <input class="form-control" type="file" name="logo"></input>
+                                </div>
+
+                                <label for="password">Banner</label>
+                                <div class="form-group">
+                                    <input class="form-control" type="file" name="banner"></input>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary m-t-15 waves-effect">UPDATE</button>
+                        </form>
+                        {{/if}}
+
+
+                        {{#if entity.course}}
+                        <form  method="post" action="{{entity.url}}update">
+                            <input type="hidden" value="{{data.id}}" name="id" id="text">
+                            <a href="" data-sub-html="Demo Description">
+                                <img style="height:50px; width:50px" class="img-responsive thumbnail"
+                                    src="/uploads/{{data.path}}">
+                            </a>
+                            <input name="oldImg" value="{{data.path}}" type="hidden" />
+                            <label for="password">Name</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input required type="text" name="name" value="{{data.name}}" id="text"
+                                        class="form-control" placeholder="Enter name">
+                                </div>
+                            </div>
+
+                            <label for="password">Fee</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input required type="text" name="fee" id="text" value="{{data.fee}}"
+                                        class="form-control" placeholder="Enter tuition fee">
+                                </div>
+                            </div>
+
+                            <label for="password">Scholarship Amount</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input type="text" value="{{data.scholarshipAmount}}" name="scholarshipAmount"
+                                        id="text" class="form-control" placeholder="Enter scholarship amount">
+                                </div>
+                            </div>
+                            <label for="password">Duration</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input required type="text" name="duration" value="{{data.duration}}" id="text"
+                                        class="form-control" placeholder="Enter duration">
+                                </div>
+                            </div>
+                            
+
+                            <label for="password">Intake</label>
+                            <div class="form-group">
+                                <select required name="intake" class="form-control show-tick">
+                                    <option value="{{data.intake}}">{{data.intake}}</option>
+                                    <option value="September">September</option>
+                                    <option value="January & September">January & September</option>
+                                    <option value="April/October">April/October</option>
+                                    <option value="August">August</option>
+                                    <option value="January">January</option>
+                                    <option value="January & May & September">January & May & September</option>
+                                </select>
+                            </div>
+
+                            <label for="password">Institution</label>
+                            <div class="form-group">
+                                <select required name="institution" class="form-control show-tick">
+                                    <option value="{{data.Institution.id}}">{{data.Institution.name}}</option>
+                                    {{#each inst}}
+                                    <option value="{{this.id}}">{{this.name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <label for="password">Degree Type</label>
+                            <div class="form-group">
+                                <select name="degreeType" class="form-control">
+                                    <option required value="{{data.DegreeType.id}}">{{data.DegreeType.name}}</option>
+                                    {{#each degreeTypeData}}
+                                    <option value="{{this.id}}">{{this.name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <label for="password">Study Area/Faculty</label>
+                            <div id="studyContainer" class="form-group">
+                                <select id="studyWrapper" required name="studyArea" class="form-control">
+                                    <option value="{{data.StudyArea.originalId}}">{{data.StudyArea.name}}</option>
+                                    {{#each studyAreaData}}
+                                    <option value="{{this.oId}}">{{this.name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+
+                            </br>
+
+                            </br>
+                            <div class="form-check">
+                                <input type="checkbox" name="popular" class="form-check-input" id="exampleCheck1" {{#if data.isPopular}}checked{{/if}}>
+                                <label class="form-check-label" for="exampleCheck1">Is this a popular course?</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary m-t-15 waves-effect">UPDATE</button>
+                        </form>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Vertical Layout -->
+    </div>
+</section>
+<script type="text/javascript" src="/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript">
+    tinymce.init({
+        selector: 'textarea.richText',
+        plugins: 'print preview fullpage paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',
+        imagetools_cors_hosts: ['picsum.photos'],
+        menubar: 'file edit view insert format tools table help',
+        toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+        toolbar_sticky: true,
+        autosave_ask_before_unload: true,
+        autosave_interval: "30s",
+        autosave_prefix: "{path}{query}-{id}-",
+        autosave_restore_when_empty: false,
+        autosave_retention: "2m",
+        image_advtab: true,
+        content_css: [
+            '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+            '//www.tiny.cloud/css/codepen.min.css'
+        ],
+        link_list: [
+            { title: 'My page 1', value: 'http://www.tinymce.com' },
+            { title: 'My page 2', value: 'http://www.moxiecode.com' }
+        ],
+        image_list: [
+            { title: 'My page 1', value: 'http://www.tinymce.com' },
+            { title: 'My page 2', value: 'http://www.moxiecode.com' }
+        ],
+        image_class_list: [
+            { title: 'None', value: '' },
+            { title: 'Some class', value: 'class-name' }
+        ],
+        importcss_append: true,
+        height: 400,
+        file_picker_callback: function (callback, value, meta) {
+            /* Provide file and text for the link dialog */
+            if (meta.filetype === 'file') {
+                callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
+            }
+
+            /* Provide image and alt text for the image dialog */
+            if (meta.filetype === 'image') {
+                callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
+            }
+
+            /* Provide alternative source and posted for the media dialog */
+            if (meta.filetype === 'media') {
+                callback('movie.mp4', { source2: 'alt.ogg', poster: 'https://www.google.com/logos/google.jpg' });
+            }
+        },
+        templates: [
+            { title: 'New Table', description: 'creates a new table', content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>' },
+            { title: 'Starting my story', description: 'A cure for writers block', content: 'Once upon a time...' },
+            { title: 'New list with dates', description: 'New List with dates', content: '<div class="mceTmpl"><span class="cdate">cdate</span><br /><span class="mdate">mdate</span><h2>My List</h2><ul><li></li><li></li></ul></div>' }
+        ],
+        template_cdate_format: '[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]',
+        template_mdate_format: '[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]',
+        height: 600,
+        image_caption: true,
+        quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+        noneditable_noneditable_class: "mceNonEditable",
+        toolbar_drawer: 'sliding',
+        contextmenu: "link image imagetools table",
+    });
+</script>
+<style>
+    #mceu_2. {
+        height: 24px;
+    }
+</style>

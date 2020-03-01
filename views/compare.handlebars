@@ -1,0 +1,571 @@
+<title>Scotiaworld | Compare</title>
+
+
+
+
+
+<!-- bread-crumb start here -->
+<div class="bread-crumb">
+	<img src="/main_theme/images/banner-top.jpg" class="img-responsive" alt="banner-top" title="banner-top">
+	<div class="container">
+		<div class="matter">
+			<h2>COMPARE</h2>
+			<ul class="list-inline">
+				<li>
+					<a href="/">Home</a>
+				</li>
+				<li>
+					<a href="#">Current Page</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<!-- bread-crumb end here -->
+
+<!-- coures start here -->
+<div class="coures">
+	<div class="container">
+		<div class="row">
+			<div class="spinner-border" role="status">
+				<span class="sr-only">Loading...</span>
+			</div>
+			{{!-- <div class="col-sm-3 col-xs-12 hidden-xs">
+				<div class="left">
+					<h4>{{best}}</h4>
+					<div class="popular">
+						{{#each data }}
+						<a href="/detail/{{this.Institution.name}}/{{this.name}}/{{this.id}}">
+							<div class="box">
+								<img style="height:150px" width="100%" src="/uploads/{{this.path}}"
+									class="img-thumbnail" alt="img" title="img" />
+								<p><strong>{{this.Institution.name}}</strong></p>
+								<p>{{this.name}}</p>
+								<span>{{this.fee}}</span>
+							</div>
+						</a>
+						{{/each}}
+						<hr>
+						<h5 style="text-align: center;"><a href="/popular-Courses">View more ...</a></h5>
+					</div>
+				</div>
+			</div> --}}
+			<div class="col-sm-12 col-xs-12">
+
+				<div class="col-sm-12 sort">
+					<h3 style="text-align:center">Compare</h3>
+				</div>
+				<div ng-controller="school" class="col-sm-12 sort">
+					<div style="padding: 10px;" class="row">
+
+						<div class="col-lg-2"></div>
+						<div class="col-lg-8">
+							<hr>
+							<select id="cboSearchType" class="form-control">
+								<option value="0">Compare Fees</option>
+								<option value="0">Compare Course</option>
+								<option value="0">Compare Scholarship</option>
+								<option value="2">Seek Professional Advice</option>
+							</select>
+						</div>
+						<div class="col-lg-2"></div>
+					</div>
+					<hr>
+					<div style="padding: 10px;" class="row feeCompareContainer">
+						<div class="col-lg-3 col-md-3">
+							<hr>
+
+
+							<select id="uni1" class="form-control">
+								<option value="0">--Institution 1--</option>
+								<option value="0">All</option>
+								<option value="{[{u.id}]}" ng-repeat="u in drop.institutions">{[{u.name}]}</option>
+							</select>
+
+
+						</div>
+						<div class="col-lg-3 col-md-3">
+							<hr>
+
+							<select id="uni2" class="form-control">
+								<option value="0">--Institution 2--</option>
+								<option value="0">All</option>
+								<option value="{[{u.id}]}" ng-repeat="u in drop.institutions">{[{u.name}]}</option>
+							</select>
+						</div>
+						<div class="col-lg-3 col-md-3">
+							<hr>
+							<select style="padding-top: 5px;" id="faculty" class="form-control">
+								<option value="0">--Select Faculty--</option>
+								<option value="0">All</option>
+								<option value="{[{u.oId}]}" ng-repeat="u in drop.faculty">{[{u.name}]}</option>
+							</select>
+						</div>
+						<div class="col-lg-2 col-md-2">
+							<hr>
+							
+							<select id="level" class="form-control">
+								<option value="0">--Select Level--</option>
+								<option value="0">All</option>
+								<option value="{[{u.id}]}" ng-repeat="u in drop.degree">{[{u.name}]}</option>
+
+							</select>
+						</div>
+						{{!-- <div class="col-lg-1 col-md-1">
+							<button id="btnSearch" class="btn btn-primary"> <i class="fa fa-search"></i></button>
+						</div> --}}
+					</div>
+					{{!-- <div class="col-lg-12 spinner"><img class="pull-right" style="height: 20px; width:20px"
+							src="/loader.gif" />
+					</div> --}}
+				</div>
+				<div style="display: none" class="row enquiryContainer">
+					<div class="col-lg-3 col-md-3"></div>
+					<div class="col-lg-6 col-md-6 sort">
+						<img class="img-responsive" src="/enquiry.jpg" />
+						<form id="enquiryForm" method="POST">
+							<hr>
+							<div id="alertContainer">
+
+							</div>
+							<div class="form-group">
+								<label>Full name:</label>
+								<input required name="name" class="form-control" />
+							</div>
+							<div class="form-group">
+								<label>Email:</label>
+								<input type="email" required name="email" class="form-control" />
+							</div>
+							<div class="form-group">
+								<label>Phone:</label>
+								<input type="tel" name="phone" class="form-control" />
+							</div>
+							<div class="form-group">
+								<label>Address:</label>
+								<input name="address" class="form-control" />
+							</div>
+							<div class="form-group">
+								<label>Message:</label>
+								<textarea required name="message" class="form-control" /></textarea>
+							</div>
+							<hr>
+							<button id="btnEnquiry" type="submit" class="btn btn-primary">Submit</button>
+							<button type="reset" class="btn btn-default">Reset</button> <img
+								style="width: 20px; heigth:20px" id="enquirySpinner" src="/loader.gif" />
+						</form>
+					</div>
+					<div class="col-lg-3 col-md-3"></div>
+				</div>
+
+				<div class="row feeCompareContainer">
+					<div class="col-lg-6 col-md-6">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<strong id="schoolName1"></strong>
+							</div>
+							<div class="panel-body">
+								<div class="form-group has-feedback has-search">
+									<span class="glyphicon glyphicon-search form-control-feedback"></span>
+									{{!-- <input type="text" placeholder="Search course names, faculties and fees"
+										id="firstSearchbar" class="form-control" placeholder="Search"> --}}
+								</div>
+								<div class="table-responsive">
+									<table class="table table-striped">
+										<thead>
+											<tr>
+												<th scope="col">Course</th>
+												<th scope="col">Faculty</th>
+												<th scope="col">Fee</th>
+												<th scope="col">Scholarship</th>
+												<th scope="col">Intake</th>
+											</tr>
+										</thead>
+										<tbody id="course1Wrapper">
+
+										</tbody>
+									</table>
+								</div>
+
+							</div>
+							<div class="panel-footer">
+								<button id="btnBack" type="button">
+									<< Back</button> <button id="btnNext" class="pull-right" type="button">Next >>
+								</button>
+							</div>
+							<div>
+								<h5 id="pageOneCaption" style="padding: 10px;" class="pull-right"> </h5>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="col-lg-6 col-md-6">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<strong id="schoolName2"></strong>
+							</div>
+							<div class="panel-body">
+								<div class="form-group has-feedback has-search">
+									<span class="glyphicon glyphicon-search form-control-feedback"></span>
+									{{!-- <input id="secondSearchbar" placeholder="Search course names, faculties and fees"
+										type="text" class="form-control" placeholder="Search"> --}}
+								</div>
+								<div class="table-responsive">
+									<table style="" class="table table-striped">
+										<thead>
+											<tr>
+												<th scope="col">Course</th>
+												<th scope="col">Faculty</th>
+												<th scope="col">Fee</th>
+												<th scope="col">Scholarship</th>
+												<th scope="col">Intake</th>
+											</tr>
+										</thead>
+										<tbody id="course2Wrapper">
+
+										</tbody>
+									</table>
+								</div>
+
+
+							</div>
+							<div class="panel-footer">
+								<button id="btnBack2" type="button">
+									<< Back</button> <button id="btnNext2" class="pull-right" type="button">Next >>
+								</button>
+							</div>
+							<div>
+								<h5 id="pageTwoCaption" style="padding: 10px;" class="pull-right"> </h5>
+							</div>
+						</div>
+
+					</div>
+
+
+
+					<hr>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<script>
+		$(document).ready(function () {
+
+			var ten = 10;
+			var offSetOne = 0;
+			var offSetTwo = 0;
+			var enquiryContainer = $(".enquiryContainer");
+			var feeCompareContainer = $(".feeCompareContainer");
+			var btnSearch = $("#btnSearch");
+			var cboUni1 = $("#uni1");
+			var cboUni2 = $("#uni2");
+			var cboFaculty = $("#faculty");
+			var cboLevel = $("#level");
+			var wrapper1 = $("#course1Wrapper");
+			var wrapper2 = $("#course2Wrapper");
+			var name1 = $("#schoolName1");
+			var name2 = $("#schoolName2");
+			//var searchSpinner = $(".spinner");
+			var cboSearchType = $("#cboSearchType");
+			var btnBack = $("#btnBack");
+			var btnNext = $("#btnNext");
+			//var secondSearchBar = $("#secondSearchbar");
+			//var firstSearchBar = $("#firstSearchbar");
+			var pageOneCaption = $("#pageOneCaption");
+			var pageTwoCaption = $("#pageTwoCaption");
+
+			var btnBack2 = $("#btnBack2");
+			var btnNext2 = $("#btnNext2");
+			var tableOneDataStore = [];
+			var tableTwoDataStore = [];
+			var allData = [];
+			var renderData = [];
+			var allData2 = [];
+			var renderData2 = [];
+			var totalData1 = 0;
+			var totalData2 = 0;
+			initializeParams();
+
+			var limit1, limit2, pageNext1, pagePrevious1, pageNext2, pagePrevious2;
+
+			function initializeParams() {
+				limit1 = ten;
+				limit2 = ten;
+				pageNext1 = ten;
+				pageNext2 = ten;
+				pagePrevious1 = 0;
+				pagePrevious2 = 0
+			}
+
+			function paginationCaption(currentPage, totalPage, container, limit) {
+				//console.log(`total page: ${totalPage} limit: ${limit} current page: ${currentPage}`)
+
+				var total = (totalPage < 10) ? limit : totalPage;
+
+				var curr = Math.floor(currentPage / limit);
+				var tot = Math.floor(total / limit);
+				return container.empty().append("<strong>page " + curr + "  of " + tot + " </strong>");
+			}
+			function startsWith(str, word) {
+				return str.toUpperCase().lastIndexOf(word.toUpperCase(), 0) === 0;
+			}
+			function template(obj) {
+
+				if (typeof obj === "object") {
+
+					if ("hasData" in obj && obj.hasData && (obj.data !== undefined)) {
+						var url = "/detail/" + obj.data.Institution.name + "/" + obj.data.name + "/" + obj.data.id;
+
+						return ("<tr style='width:100%'> <td><a href='" + url + "'>" + obj.data.name + "</a></td> <td>" + obj.data.StudyArea.name + "</td> <td>" + obj.data.fee + "</td> <td>£ " + obj.data.scholarshipAmount + "</td> <td>" + obj.data.intake + "</td></tr>")
+					} else if (!obj.hasData) {
+
+						return ("<tr> <td></td> <td></td> <td><strong>No Result Found</strong></td><td></td><td></td></tr>")
+
+					} else {
+
+						return ("<tr> <td></td> <td></td> <td><img style='width:20px; length:20px' src='/loader.gif' /></td> <td></td><td></td></tr>")
+					}
+
+				} else {
+					console.log("Argument requires an object")
+				}
+			}
+			btnBack.click(function (e) {
+				if (pagePrevious1 == 0) {
+					$(this).attr("disabled", true);
+				}
+				else {
+					$(this).attr("disabled", false);
+					offSetOne -= limit1;
+					pagePrevious1 -= limit1;
+
+					ajaxRequest(getIputs().uni1, getIputs().uni2, getIputs().faculty, getIputs().level, offSetOne, offSetTwo);
+					paginationControl();
+					//paginationCaption((pageNext1), totalData1, pageOneCaption, limit1);
+				}
+			})
+			btnBack2.click(function (e) {
+
+				if (pagePrevious2 == 0) {
+					$(this).attr("disabled", true);
+				}
+				else {
+					$(this).attr("disabled", false);
+					offSetTwo -= limit2;
+					pagePrevious2 -= limit2;
+					ajaxRequest(getIputs().uni1, getIputs().uni2, getIputs().faculty, getIputs().level, offSetOne, offSetTwo);
+					paginationControl();
+					//paginationCaption((pageNext2), totalData2, pageTwoCaption, limit2);
+
+				}
+			})
+
+			btnNext.click(function (e) {
+				offSetOne += limit1;
+				pagePrevious1 += limit1;
+
+				ajaxRequest(getIputs().uni1, getIputs().uni2, getIputs().faculty, getIputs().level, offSetOne, offSetTwo);
+
+				paginationControl();
+
+				//paginationCaption(pageNext1, allData.length, pageOneCaption, limit1);
+
+
+			})
+			btnNext2.click(function (e) {
+
+				offSetTwo += limit2;
+				pagePrevious2 += limit2;
+				ajaxRequest(getIputs().uni1, getIputs().uni2, getIputs().faculty, getIputs().level, offSetOne, offSetTwo);
+				//adding the first parameter as pagePrevious initial value is zero 
+				paginationControl();
+				//paginationCaption(pageNext2, totalData2, pageTwoCaption, limit2);
+			})
+			function paginationControl() {
+				//alert(totalData2)
+
+
+				if (totalData2 < ten)
+					btnNext2.attr("disabled", true);
+				else
+					btnNext2.attr("disabled", false);
+
+				if (totalData1 < ten)
+					btnNext.attr("disabled", true);
+				else
+					btnNext.attr("disabled", false);
+
+				if (pagePrevious2 <= 0)
+					btnBack2.attr("disabled", true);
+
+				else
+					btnBack2.attr("disabled", false);
+
+				if (pagePrevious1 <= 0)
+					btnBack.attr("disabled", true);
+				else
+					btnBack.attr("disabled", false);
+			}
+			displayContainer(cboSearchType);
+			cboSearchType.change(function () {
+				displayContainer($(this));
+			})
+			function displayContainer(input) {
+				var val = input.children("option:selected").val();
+				if (val == 0) {
+					feeCompareContainer.show();
+					enquiryContainer.hide();
+				} else if (val == 2) {
+					feeCompareContainer.hide();
+					enquiryContainer.show();
+				}
+			}
+			//searchSpinner.hide();
+
+			function getIputs() {
+				return {
+					uni1: cboUni1,
+					uni2: cboUni2,
+					faculty: cboFaculty,
+					level: cboLevel
+				}
+			}
+			function ajaxRequest(uni1, uni2, faculty, level, offSetOne, offSetTwo) {
+				var firstUniText = uni1.find(":selected").text().trim();
+				var firstUniVal = uni1.val().trim();
+
+				var secondUniText = uni2.find(":selected").text().trim();
+				var secondUniVal = uni2.val().trim();
+
+				var facultyText = faculty.find(":selected").text().trim();
+				var facultyVal = faculty.val().trim();
+
+				var levelText = level.find(":selected").text().trim();
+				var levelVal = level.val().trim();
+
+				//alert(uni2.text().trim())
+				//searchSpinner.show();
+				if (firstUniVal != 0)
+					name1.empty().append(firstUniText)
+				else
+					name1.empty().append("All Institutions")
+				if (secondUniVal != 0)
+					name2.empty().append(secondUniText)
+				else
+					name2.empty().append("All Institutions");
+
+				wrapper1.empty().append(template({}))
+				wrapper2.empty().append(template({}))
+				$.ajax({
+					type: "POST",
+					url: "/compareFee",
+					data: { institutionId1: firstUniVal, institutionId2: secondUniVal, facultyId: facultyVal, degreeTypeId: levelVal, offSetOne: offSetOne, offSetTwo: offSetTwo },
+					dataType: "json",
+					success: function (result) {
+
+						//searchSpinner.hide();
+						var course1 = result.data.course1;
+						var course2 = result.data.course2;
+
+						allData = tableOneDataStore = course1;
+						allData2 = tableTwoDataStore = course2;
+
+						renderData = allData;
+						renderData2 = allData2;
+
+						totalData1 = course1.length;
+						totalData2 = course2.length;
+						paginationControl();
+
+						wrapper1.empty();
+						wrapper2.empty();
+
+						if (course1.length == 0)
+							wrapper1.append(template({ hasData: false }))
+						else {
+
+							renderData.forEach(function (course) {
+								wrapper1.append(template({ hasData: true, data: course }));
+							})
+						}
+
+						if (course2.length == 0)
+							wrapper2.append(template({ hasData: false }))
+						else {
+
+							renderData2.forEach(function (course) {
+								wrapper2.append(template({ hasData: true, data: course }));
+							})
+						}
+
+
+
+						//paginationCaption(limit1, totalData1, pageOneCaption, limit1);
+						//paginationCaption(limit2, totalData2, pageTwoCaption, limit2);
+					},
+					error: function (er) {
+
+					}
+				});
+			}
+			ajaxRequest(getIputs().uni1, getIputs().uni2, getIputs().faculty, getIputs().level, offSetOne, offSetTwo);
+			btnSearch.click(function () {
+				ajaxRequest(getIputs().uni1, getIputs().uni2, getIputs().faculty, getIputs().level, offSetOne, offSetTwo);
+			});
+			cboUni1.change(function () {
+				ajaxRequest(getIputs().uni1, getIputs().uni2, getIputs().faculty, getIputs().level, offSetOne, offSetTwo);
+			})
+			cboUni2.change(function () {
+
+				ajaxRequest(getIputs().uni1, getIputs().uni2, getIputs().faculty, getIputs().level, offSetOne, offSetTwo);
+			})
+			cboFaculty.change(function () {
+				ajaxRequest(getIputs().uni1, getIputs().uni2, getIputs().faculty, getIputs().level, offSetOne, offSetTwo);
+			})
+			cboLevel.change(function () {
+				ajaxRequest(getIputs().uni1, getIputs().uni2, getIputs().faculty, getIputs().level, offSetOne, offSetTwo);
+			})
+
+			function alertBoxTemplate(message, isError) {
+
+				var classVal = isError ? "alert alert-danger" : "alert alert-success";
+				$("#alertContainer").empty().html("<div class=" + classVal + "> " + message + "</div>").fadeOut(16000);
+			}
+			var myform = $("#enquiryForm");
+			var enquirySpinner = $("#enquirySpinner");
+			var btnEnquiry = $("#btnEnquiry");
+
+			enquirySpinner.hide();
+			myform.on('submit', function (e) {
+				btnEnquiry.attr("disabled", true);
+				enquirySpinner.show();
+				e.preventDefault();
+				$.ajax({
+					type: 'post',
+					url: '/enquiry/add',
+					data: myform.serialize(),
+					success: function (response) {
+						btnEnquiry.attr("disabled", false);
+						if (!response.error)
+							alertBoxTemplate("Thanks for your enquiry, we will get back to you in 2 working days ", false);
+						else
+							alertBoxTemplate("Form submission was not successful, please try again later.", true);
+						enquirySpinner.hide();
+					},
+					error: function (jqXHR, exception) {
+						btnEnquiry.attr("disabled", false);
+						alertBoxTemplate("Form submission was not successful, please try again later.", true);
+						enquirySpinner.hide();
+					}
+				});
+			})
+
+
+		});
+
+	</script>
+	<!-- coures end here -->
+
+
+	<!-- coures end here -->

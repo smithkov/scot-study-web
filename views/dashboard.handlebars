@@ -1,0 +1,297 @@
+{{#if user.roleId}}
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>DASHBOARD</h2>
+        </div>
+
+        <!-- Widgets -->
+        <div class="row clearfix">
+            <a href="/user/all">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box bg-pink hover-expand-effect">
+                        <div class="icon">
+                            <i class="material-icons">group</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">REGISTERED USERS</div>
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <a href="/application/applicants">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box bg-cyan hover-expand-effect">
+                        <div class="icon">
+                            <i class="material-icons">how_to_reg</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">APPLICATIONS</div>
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <a href="/user/inbox">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box bg-light-green hover-expand-effect">
+                        <div class="icon">
+                            <i class="material-icons">message</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">INBOX {{#if hasBadge}} <span class="badge">{{unreadNum}}</span>{{/if}}
+                            </div>
+                            <div>{{courses}} </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <a href="/user/compose">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+
+                    <div class="info-box bg-orange hover-expand-effect">
+                        <div class="icon">
+                            <i class="material-icons">create</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">COMPOSE MESSAGE</div>
+                            <div></div>
+                        </div>
+                    </div>
+
+                </div>
+            </a>
+        </div>
+        <!-- #END# Widgets -->
+        <!-- CPU Usage -->
+        <div class="row clearfix">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="header">
+                        <div class="row clearfix">
+                            <div class="col-xs-12 col-sm-6">
+                                <h2>SUBMITTED APPLICATIONS</h2>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-hover dashboard-task-infos">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Fullname</th>
+                                        <th>Nationality</th>
+                                        <th>Application Date</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each submitted}}
+                                    <tr>
+                                        <td></td>
+                                        <td>{{this.firstname}} {{this.middlename}}{{this.lastname}} </td>
+                                        <td>{{this.City.name}}</td>
+                                        <td>{{this.createdAt}}</td>
+
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# CPU Usage -->
+    </div>
+</section>
+{{else}}
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>DASHBOARD</h2>
+        </div>
+
+        <!-- Widgets -->
+        <div class="row clearfix">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box hover-zoom-effect">
+                    <div class="icon bg-pink">
+                        <i class="material-icons">home</i>
+                    </div>
+                    <div class="content">
+                        <div class="text">HOME PAGE</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                {{#if app.hasSubmitted}}
+                <a href="/application/read-Application">
+                    <div class="info-box hover-zoom-effect">
+                        <div class="icon bg-cyan">
+                            <i class="material-icons">how_to_reg</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">VIEW </div>
+                            <div>APPLICATION</div>
+                        </div>
+                    </div>
+                </a>
+                {{else}}
+                {{#if app}}
+                <a href="/application/step1">
+                    <div class="info-box hover-zoom-effect">
+                        <div class="icon bg-cyan">
+                            <i class="material-icons">how_to_reg</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">CONTINUE </div>
+                            <div>APPLICATION</div>
+                        </div>
+                    </div>
+                </a>
+                {{else}}
+                <a href="/application/step1">
+                    <div class="info-box  hover-zoom-effect">
+                        <div class="icon bg-cyan">
+                            <i class="material-icons">how_to_reg</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">APPLY</div>
+                            <div>HERE</div>
+                        </div>
+                    </div>
+                </a>
+                {{/if}}
+                {{/if}}
+            </div>
+            <a href="/user/compose">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+
+                    <div class="info-box hover-zoom-effect">
+                        <div class="icon bg-green">
+                            <i class="material-icons">create</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">COMPOSE MESSAGE</div>
+                            <div></div>
+                        </div>
+                    </div>
+
+                </div>
+            </a>
+
+            <a href="/user/inbox">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+
+                    <div class="info-box hover-zoom-effect">
+                        <div class="icon bg-orange">
+                            <i class="material-icons">message</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">INBOX</div>
+                            <div class="number count-to" data-from="0" data-to="" data-speed="1000"
+                                data-fresh-interval="20"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </a>
+        </div>
+
+        {{#if showProgress}}
+
+        <div class="card">
+            <div class="header">
+                <h2>
+                    APPLICATION PROGRESS ({{appPercentage}}%)
+                </h2>
+
+            </div>
+            <div class="body">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar"
+                        aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{appPercentage}}%">
+                        <span class="sr-only">40% Complete (success)</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        {{/if}}
+
+
+        <hr>
+        <div class="card jumbotron">
+            <table style="border-collapse: separate; border-spacing: 10px;">
+                <tr>
+                    <td><img style="height: 30px; width:30px" {{#if app.hasSubmitted}} src="/accepted.png" {{else}}
+                            src="/pending.png" {{/if}} /></td>
+                    <td>Form Submission</td>
+
+                </tr>
+                <tr>
+                    <td><img style="height: 30px; width:30px" {{#if app.eligibilityCheck}} src="/accepted.png" {{else}}
+                            src="/pending.png" {{/if}} /></td>
+                    <td>Eligibilty Check</td>
+
+                </tr>
+                <tr>
+                    <td><img style="height: 30px; width:30px" {{#if app.reqProvision}} src="/accepted.png" {{else}}
+                            src="/pending.png" {{/if}} /></td>
+                    <td>Requirement Provision</td>
+                </tr>
+                <tr>
+                    <td><img style="height: 30px; width:30px" {{#if app.hasFinalSubmit}} src="/accepted.png" {{else}}
+                            src="/pending.png" {{/if}} /></td>
+                    <td>Application Submission</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="divider">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Decision</td>
+                    <td></td>
+                </tr>
+                {{#if app.hasFinalSubmit}}
+                <tr>
+                    <td><img style="height: 30px; width:30px" src="/accepted.png" /></td>
+                    <td>Under Review</td>
+                </tr>
+                {{/if}}
+                {{#if app.decision}}
+                <tr>
+                    <td><img style="height: 30px; width:30px" src="/offer.png" /></td>
+                    <td> {{app.decision}}</td>
+                </tr>
+                {{else}}
+                <tr>
+                    <td><img style="height: 30px; width:30px" src="/pending.png" /></td>
+                    <td>Application Status: Pending</td>
+                </tr>
+                {{/if}}
+
+                <tr>
+                    <td><img style="height: 30px; width:30px" {{#if app.hasPaid}} src="/accepted.png" {{else}}
+                            src="/pending.png" {{/if}} /></td>
+                    <td>Fee Payment Confirmation</td>
+                </tr>
+                <tr>
+                    <td><img style="height: 30px; width:30px" {{#if app.hasCas}} src="/accepted.png" {{else}}
+                            src="/pending.png" {{/if}} /></td>
+                    <td>CAS Issuance</td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+</section>
+
+{{/if}}

@@ -1,0 +1,184 @@
+<title>Scotiaworld | Find-Course</title>
+<!-- bread-crumb start here -->
+<div class="bread-crumb">
+	<img src="/main_theme/images/banner-top.jpg" class="img-responsive" alt="banner-top" title="banner-top">
+	<div class="container">
+		<div class="matter">
+			<h2>COURSES</h2>
+			<ul class="list-inline">
+				<li>
+					<a href="/">Home</a>
+				</li>
+				<li>
+					<a href="#">Current Page</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<!-- bread-crumb end here -->
+
+<!-- coures start here -->
+<div class="coures">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-3 col-md-3 hidden-sm  hidden-xs">
+				<div class="left">
+					<h4>{{best}}</h4>
+					<div class="popular">
+						{{#each data }}
+						<a href="/detail/{{this.Institution.name}}/{{this.name}}/{{this.id}}">
+							<div class="box">
+								<img style="height:150px" width="100%" src="/uploads/{{this.path}}"
+									class="img-thumbnail" alt="img" title="img" />
+								<p><strong>{{this.Institution.name}}</strong></p>
+								<p>{{this.name}}</p>
+								<span>{{this.fee}}</span>
+							</div>
+						</a>
+						{{/each}}
+						<hr>
+						<h5 style="text-align: center;"><a href="/popular-Courses">View more ...</a></h5>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+				<div class="col-lg-12 col-md-12 col-sm-12 sort">
+					<h3 style="text-align:center"><strong>Search for Courses</strong></h3>
+				</div>
+				<div ng-controller="school" class="col-sm-12 sort">
+					<div style="padding: 10px;" class="row">
+						<div class="col-lg-3">
+							<hr>
+							<select id="degree" class="form-control">
+								<option value="0">--Select Degree--</option>
+								<option value="0">All</option>
+								<option value="{[{u.id}]}" ng-repeat="u in drop.degree">{[{u.name}]}</option>
+
+							</select>
+						</div>
+						<div class="col-lg-4 col-md-4">
+							<hr>
+							<select style="padding-top: 5px;" id="faculty" class="form-control">
+								<option value="0">--Select Faculty--</option>
+								<option value="0">All</option>
+								<option value="{[{u.oId}]}" ng-repeat="u in drop.faculty">{[{u.name}]}</option>
+							</select>
+						</div>
+						<div class="col-lg-4 col-md-4">
+							<hr>
+							<select id="institution" class="form-control">
+								<option value="0">--Select Institutions--</option>
+								<option value="0">All</option>
+								<option value="{[{u.id}]}" ng-repeat="u in drop.institutions">{[{u.name}]}</option>
+							</select>
+						</div>
+						<div class="col-lg-1 col-md-1">
+							<hr>
+							<button id="btnSearch" class="btn btn-primary"> <i class="fa fa-search"></i></button>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<div class="table-responsive">
+							<table id="example" class="display" style="width:100%">
+								<thead>
+									<tr>
+										<th>Course Logo</th>
+										<th>Course Name</th>
+										<th>Tuition Fee</th>
+										<th>Faculty</th>
+										<th>Degree</th>
+										<th>Institution</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+
+
+				</div>
+				<hr>
+
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(document).ready(function () {
+
+		var btnSearch = document.getElementById("btnSearch");
+
+
+		var cboFaculty = document.getElementById("faculty");
+		var facultyVal = cboFaculty.options[cboFaculty.selectedIndex].value;
+
+		var cboDegree = document.getElementById("degree");
+		var degreeVal = cboDegree.options[cboDegree.selectedIndex].value;
+
+		var cboInstitution = document.getElementById("institution");
+		var institutionVal = cboInstitution.options[cboInstitution.selectedIndex].value;
+		btnSearch.addEventListener("click", function () {
+			var degree = cboDegree.options[cboDegree.selectedIndex].value;
+			var faculty = facultyVal = cboFaculty.options[cboFaculty.selectedIndex].value;
+			var institution = cboInstitution.options[cboInstitution.selectedIndex].value;
+
+			callApi(degree, faculty, institution);
+		});
+		function callApi(degree, faculty, institution) {
+			
+
+			$('#example').DataTable({
+				"ajax": {
+					"url": "/courseSearch",
+					"type": "POST",
+					"data": { degreeId: degree, facultyId: faculty, institutionId: institution },
+					"dataSrc": "data"
+				},
+				"bDestroy": true,
+				"deferRender": true,
+				"columns": [
+					{
+						"data": "path",
+						"render": function (data, type, row, meta) {
+							var url = "/uploads/" + row.path;
+							data = '<img style="height:85px; width:280px" src="' + url + '" class="img-responsive"/>';
+
+							return data;
+						}
+					},
+					{
+						"data": "name",
+						"render": function (data, type, row, meta) {
+							if (type === 'display') {
+								data = "<a href='detail/school/name" + '/' + row.id + "'>" + row.name + "</a>";
+							}
+							return data;
+						}
+					},
+					{
+						"data": "fee"
+					},
+					{
+						"data": "DegreeType.name"
+					},
+					{
+						"data": "StudyArea.name"
+					},
+
+					{
+						"data": "Institution.name"
+					},
+
+				]
+			});
+		}
+		callApi(degreeVal, facultyVal, institutionVal);
+
+	});
+</script>
+<!-- coures end here -->
+
+
+<!-- coures end here -->

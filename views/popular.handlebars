@@ -1,0 +1,162 @@
+<title>Scotiaworld | Popular-Course</title>
+<!-- bread-crumb start here -->
+<div class="bread-crumb">
+	<img src="/main_theme/images/banner-top.jpg" class="img-responsive" alt="banner-top" title="banner-top">
+	<div class="container">
+		<div class="matter">
+			<h2>BEST SELLING COURSES</h2>
+			<ul class="list-inline">
+				<li>
+					<a href="/">Home</a>
+				</li>
+				<li>
+					<a href="#">Current Page</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<!-- bread-crumb end here -->
+
+<!-- coures start here -->
+<div class="coures">
+	<div class="container">
+		<div class="row">
+
+			<div class="col-sm-12 col-xs-12">
+				<div class="col-sm-12 sort">
+					<h3 style="text-align:center"><strong>Best Selling Courses</strong></h3>
+				</div>
+				<div ng-controller="school" class="col-sm-12 sort">
+					<div class="row">
+						<div class="col-lg-3">
+							<select id="degree" class="form-control">
+								<option value="0">--Select Degree--</option>
+								<option value="0">All</option>
+								<option value="{[{u.id}]}" ng-repeat="u in drop.degree">{[{u.name}]}</option>
+
+							</select>
+						</div>
+						<div class="col-lg-4">
+							<select id="faculty" class="form-control">
+								<option value="0">--Select Faculty--</option>
+								<option value="0">All</option>
+								<option value="{[{u.id}]}" ng-repeat="u in drop.faculty">{[{u.name}]}</option>
+							</select>
+						</div>
+						<div class="col-lg-4">
+							<select id="institution" class="form-control">
+								<option value="0">--Select Institution--</option>
+								<option value="0">All</option>
+								<option value="{[{u.id}]}" ng-repeat="u in drop.institutions">{[{u.name}]}</option>
+							</select>
+						</div>
+						<div class="col-lg-1">
+							<button id="btnSearch" class="btn btn-primary"> <i class="fa fa-search"></i></button>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<table id="example" class="display" style="width:100%">
+						<thead>
+							<tr>
+								<th></th>
+								<th>Course Name</th>
+								<th>Tuition Fee</th>
+								<th>Scholarship Amt.</th>
+								<th>Faculty</th>
+								<th>Degree</th>
+								<th>Institution</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+				<hr>
+
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(document).ready(function () {
+
+		var btnSearch = document.getElementById("btnSearch");
+
+
+		var cboFaculty = document.getElementById("faculty");
+		var facultyVal = cboFaculty.options[cboFaculty.selectedIndex].value;
+
+		var cboDegree = document.getElementById("degree");
+		var degreeVal = cboDegree.options[cboDegree.selectedIndex].value;
+
+		var cboInstitution = document.getElementById("institution");
+		var institutionVal = cboInstitution.options[cboInstitution.selectedIndex].value;
+		btnSearch.addEventListener("click", function () {
+			var degree = cboDegree.options[cboDegree.selectedIndex].value;
+			var faculty = facultyVal = cboFaculty.options[cboFaculty.selectedIndex].value;
+			var institution = cboInstitution.options[cboInstitution.selectedIndex].value;
+
+			callApi(degree, faculty, institution);
+		});
+		function callApi(degree, faculty, institution) {
+
+			$('#example').DataTable({
+				"ajax": {
+					"url": "/popular",
+					"type": "POST",
+					"data": { degreeId: degree, facultyId: faculty, institutionId: institution },
+					"dataSrc": "data"
+				},
+				"bDestroy": true,
+				"deferRender": true,
+				"columns": [
+					{
+						"data": "path",
+						"render": function (data, type, row, meta) {
+
+							data = `<img style="height:85px; width:220px" src="/uploads/${row.path}"   class="img-thumbnail" />`;
+
+							return data;
+						}
+					},
+					{
+						"data": "Institution.name",
+						"render": function (data, type, row, meta) {
+							if (type === 'display') {
+								data = `<a href=" detail/${row.Institution.name}/${row.name}/ ${row.id}" >${row.name}</a>`;
+							}
+							return data;
+						}
+					},
+					{
+						"data": "fee"
+					},
+					{
+						"data": "scholarshipAmount",
+						"render": function (data, type, row, meta) {
+							data = `£ ${row.scholarshipAmount}`;
+							return data;
+						}
+					},
+					{
+						"data": "DegreeType.name"
+					},
+					{
+						"data": "StudyArea.name"
+					},
+
+					{
+						"data": "Institution.name"
+					},
+
+				]
+			});
+		}
+		callApi(degreeVal, facultyVal, institutionVal);
+
+	});
+</script>
+<!-- coures end here -->
+
+
+<!-- coures end here -->

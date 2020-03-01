@@ -1,0 +1,152 @@
+<title>Scotiaworld | Faculties and Courses</title>
+
+
+<div class="course">
+	<div class="container">
+		<div class="row">
+
+			<img src="/main_theme/images/banner-top.jpg" class="img-responsive" alt="banner-top" title="banner-top">
+			<div style="text-align: center;" class="container">
+				<div class="matter">
+					<h2>
+						All Faculties at <strong><span style="">{{name}}</span></strong></h2>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- bread-crumb end here -->
+
+<!-- coures start here -->
+<div class="coures">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-3 col-md-3 hidden-sm  hidden-xs">
+				<div class="left">
+					<h4>{{best}}</h4>
+					<div class="popular">
+						{{#each data }}
+						<a href="/detail/{{this.Institution.name}}/{{this.name}}/{{this.id}}">
+							<div class="box">
+								<img style="height:150px" width="100%" src="/uploads/{{this.path}}"
+									class="img-thumbnail" alt="img" title="img" />
+								<p><strong>{{this.Institution.name}}</strong></p>
+								<p>{{this.name}}</p>
+								<span>{{this.fee}}</span>
+							</div>
+						</a>
+						{{/each}}
+						<hr>
+						<h5 style="text-align: center;"><a href="/popular-Courses">View more ...</a></h5>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 mainpage">
+
+				<div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+					<div class="carousel-inner" style="width:100%; max-height:600px !important;">
+						<div class="item active">
+							{{#if school.banner}}
+							<img class="d-block w-100" src="/uploads/{{school.banner}}" alt="First slide">
+							{{else}}
+							<img class="d-block w-100" src="/main_theme/images/eventbig.jpg" alt="First slide">
+							{{/if}}
+						</div>
+
+					</div>
+				</div>
+
+				<hr>
+
+				<div id="about"></div>
+
+				<input value="{{school.about}}" id="edit" type="hidden" />
+				<hr>
+
+				<!-- Courses list start here -->
+				<div id="course" class="row">
+					{{#if faculties.length}}
+					<ul class="list-group">
+						<li class="list-group-item active">All FACULTIES IN {{school.name}}</li>
+						{{#each faculties}}
+						<li class="list-group-item"><a
+								href="/faculty/{{this.faculty.StudyArea.id}}/{{this.faculty.Institution.id}}">{{this.faculty.StudyArea.name}}</a>
+						</li>
+						{{/each}}
+
+					</ul>
+					{{/if}}
+					<hr>
+					<div class=" panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+						{{#each faculties}}
+						<div class="panel panel-primary">
+							<div class="panel-heading" role="tab" id="heading{{@index}}">
+								<h4 class="panel-title">
+									<a role="button" data-toggle="collapse" data-parent="#accordion"
+										href="#collapse{{@index}}" aria-expanded="true"
+										aria-controls="collapse{{@index}}">
+										<i class="more-less glyphicon glyphicon-plus"></i>
+										ALL COURSES IN SCHOOL OF <strong>{{this.faculty.StudyArea.name}}</strong>
+									</a>
+								</h4>
+							</div>
+							<div id="collapse{{@index}}" class="panel-collapse collapse" role="tabpanel"
+								aria-labelledby="headingOne">
+								<div class="panel-body">
+									<div class="table-responsive">
+										<table class="table table-striped">
+											<thead>
+												<tr>
+													<th scope="col">Course</th>
+													<th scope="col">Degree</th>
+													<th scope="col">Fee</th>
+													<th scope="col"></th>
+												</tr>
+											</thead>
+											<tbody>
+												{{#each this.course}}
+												<tr>
+													<th scope="row"><a
+															href="/detail/{{this.Institution.name}}/{{this.name}}/{{this.id}}">{{this.name}}</a>
+													</th>
+													<td>{{this.DegreeType.name}}</td>
+													<td>{{this.fee}}</td>
+													<td><a href="/user/login" class="btn btn-primary">Apply Now</a></td>
+												</tr>
+												{{/each}}
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						{{/each}}
+
+					</div><!-- panel-group -->
+
+				</div>
+
+				<!--Courses list ends here-->
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<script>
+
+	$(document).ready(function () {
+		var text = $("#edit").val();
+
+		$("#about").html(text);
+		// Handler for .ready() called.
+		$('html, body').animate({
+			scrollTop: $('#course').offset().top
+		}, 'slow');
+
+
+	});
+</script>
+
+<!-- coures end here -->
