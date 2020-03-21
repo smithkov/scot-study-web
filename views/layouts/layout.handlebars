@@ -5,10 +5,8 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-
 	<!-- Bootstrap stylesheet -->
-    <script src="/main_theme/js/jquery.2.1.1.min.js" type="text/javascript"></script>
+	<script src="/main_theme/js/jquery.2.1.1.min.js" type="text/javascript"></script>
 	<link href="/main_theme/bootstrap/css/bootstrap.css" rel="stylesheet">
 	<!-- font -->
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
@@ -20,18 +18,13 @@
 	<link href="/main_theme/js/owl-carousel/owl.carousel.css" rel="stylesheet" type="text/css" />
 	<!-- stylesheet -->
 	<link href="/main_theme/css/style.css" rel="stylesheet" type="text/css" />
-	
+
 	<link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
 	<script src="/main_theme/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 
 	<link rel="stylesheet" href="/owlCarousel/dist/assets/owl.carousel.min.css">
 	<link rel="stylesheet" href="/owlCarousel/dist/assets/owl.theme.default.min.css">
-
-
 	<script src="/owlCarousel/dist/owl.carousel.min.js"></script>
-
-
-	
 	<style>
 		.panel-group .panel {
 			border-radius: 0;
@@ -93,8 +86,6 @@
 </head>
 
 <body ng-app="scotiaApp">
-
-
 	<!-- header start here-->
 	<header>
 		<div class="container">
@@ -181,62 +172,9 @@
 	<!-- footer start here -->
 	<footer>
 		<div class="container">
-			<!-- Modal -->
-			<div ng-controller="school" class="modal fade" id="menuModal" tabindex="-1" role="dialog"
-				aria-labelledby="exampleModalLabel" aria-hidden="true">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">INSTITUTIONS</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<div class="panel-group" id="accordionMain" role="tablist" aria-multiselectable="true">
-
-								<div ng-repeat="u in menu" class="panel panel-primary">
-									<div class="panel-heading" role="tab" id="heading{[{u.id}]}">
-										<h4 class="panel-title">
-											<a role="button" data-toggle="collapse" data-parent="#accordion"
-												href="#collapse{[{u.id}]}" aria-expanded="true"
-												aria-controls="collapse{[{u.id}]}">
-												<i class="more-less glyphicon glyphicon-plus"></i>
-
-												<strong ng-bind="u.name"></strong>
-											</a>
-										</h4>
-									</div>
-									<div id="collapse{[{u.id}]}" class="panel-collapse collapse" role="tabpanel"
-										aria-labelledby="headingOne">
-										<h4 ng-repeat="f in u.StudyAreas"></h4>
-
-										<ul class="list-group">
-											<li class="list-group-item active"><a style="color: white;"
-													href="/school-faculties/{[{u.name}]}/{[{u.id}]}"
-													ng-bind="u.name"></a>
-											</li>
-
-											<li ng-repeat="f in u.StudyAreas" class="list-group-item"><a
-													href="/faculty/{[{f.id}]}/{[{u.id}]}" ng-bind="f.name"></a>
-											</li>
-
-
-										</ul>
-									</div>
-
-
-								</div>
-							</div>
-
-
-						</div><!-- panel-group -->
-					</div>
-				</div>
-			</div>
-		</div>
+		
 		<div class="row inner">
-			<div class="col-sm-4">
+			<div class="col-sm-4 links1">
 
 				<p class="des">OUR ALL-IN-ONE PLATFORM HELPS YOU MONITOR AND SECURE ADMISSION, GUIDES YOU THROUGH
 					VISA PROCESSES AND SETTLES YOUR ACCOMMODATION.</p>
@@ -269,7 +207,7 @@
 					ScotStudy</a>
 				<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 			</div>
-			<div class="col-sm-4 links1">
+			<div class="col-sm-4 links4">
 				<h5>quick links</h5>
 				<hr>
 				<ul class="list-unstyled">
@@ -404,8 +342,57 @@
 		$(".panel-group").on("shown.bs.collapse", toggleIcon);
 
 	</script>
+	<!-- Modal -->
+	<div ng-controller="school" class="modal fade" id="menuModal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">INSTITUTIONS</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="panel-group" id="accordionMain" role="tablist" aria-multiselectable="true">
+
+						<div ng-repeat="u in menu" class="panel panel-primary">
+							<div class="panel-heading" role="tab" id="heading{[{u.id}]}">
+								<h4 class="panel-title">
+									<a role="button" data-toggle="collapse" data-parent="#accordion"
+										href="#collapse{[{u.id}]}" aria-expanded="true"
+										aria-controls="collapse{[{u.id}]}">
+										<i class="more-less glyphicon glyphicon-plus"></i>
+
+										<strong ng-bind="u.name"></strong>
+									</a>
+								</h4>
+							</div>
+							<div id="collapse{[{u.id}]}" class="panel-collapse collapse" role="tabpanel"
+								aria-labelledby="headingOne">
+								<h4 ng-repeat="f in u.StudyAreas"></h4>
+
+								<ul class="list-group">
+									<li class="list-group-item active"><a style="color: white;"
+											href="/school-faculties/{[{u.name}]}/{[{u.id}]}" ng-bind="u.name"></a>
+									</li>
+
+									<li ng-repeat="f in u.StudyAreas" class="list-group-item"><a
+											href="/faculty/{[{f.id}]}/{[{u.id}]}" ng-bind="f.name"></a>
+									</li>
+
+
+								</ul>
+							</div>
+
+
+						</div>
+					</div>
+
+
+				</div><!-- panel-group -->
+			</div>
+		</div>
+	</div>
 </body>
-
-<!-- Mirrored from ocsolutions.co.in/html/education/ by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 10 Feb 2019 23:22:48 GMT -->
-
 </html>

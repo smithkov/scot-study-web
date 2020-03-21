@@ -145,14 +145,15 @@ router.get("/schoolsMobile", async (req, res) => {
 //   });
 // });
 
-// router.get("/institutions", async function (req, res) {
-//   let populars = await Query.Course.findByPopular();
-//   let course = await Query.Course.findAll();
-//   res.render("institutions", {
-//     data: reduceArray(populars),
-//     best: bestSelling
-//   });
-// });
+router.get("/institutions", async function (req, res) {
+  let populars = await Query.Course.findByPopular();
+  let schools = await Query.Institution.findAll();
+  res.render("institutions", {
+    data: reduceArray(populars),
+    schools:schools,
+    best: bestSelling
+  });
+});
 
 router.get("/compare-fees", async function (req, res) {
   let populars = await Query.Course.findByPopular();

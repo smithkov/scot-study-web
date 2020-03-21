@@ -1,6 +1,6 @@
 require("dotenv").config();
 const nodemailer = require("nodemailer");
-const altMailID = "info@scotstudy.co.uk";
+const altMailID = "admissions@scotstudy.co.uk";
 const mailID = altMailID;
 
 module.exports.sender = function() {

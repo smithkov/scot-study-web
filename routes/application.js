@@ -40,7 +40,9 @@ router.post("/mobileStep1", async function(req, res, next) {
   let getCourse = application
     ? await Query.Course.findById(application.courseId)
     : "";
-
+    console.log("getCourse---------------------------------")
+console.log(currentUserId)
+console.log("getCourse---------------------------------")
   return res.send({
     //courses: course,
     quali: quali,
@@ -477,6 +479,9 @@ router.post("/mobileForm1", async function(req, res, next) {
   var lastname = req.body.lastname;
   var courseId = req.body.courseId;
   var getCourseById = await Query.Course.findById(courseId);
+  console.log("----------------------------------------------------------------------")
+  console.log(courseId)
+  console.log("----------------------------------------------------------------------")
   var course1 = getCourseById.name;
   var course2 = getCourseById.name;
   var level = getCourseById.DegreeType.name;

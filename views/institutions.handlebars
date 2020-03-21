@@ -56,22 +56,18 @@
 
 						<table class="table table-striped">
 							<thead>
-								<tr>
-									<th scope="col"></th>
-									<th scope="col">Institutions</th>
-									<th scope="col">Cities</th>
-									<th scope="col"></th>
+								<tr>	
+									<th scope="col">Institution</th>
+									<th scope="col">City</th>
 								</tr>
 							</thead>
-							<tbody id="schoolWrapper">
+							<tbody>
+								{{#each schools }}
 								<tr>
-									<td></td>
-									<td></td>
-									<td><img style="width:20px; length:20px" src="/loader.gif" /></td>
-									<td></td>
-									<td></td>
-
+									<td><a href="/school-faculties/{{this.name}}/{{this.id}}">{{this.name}}</a></td>
+									<td>{{this.City.name}}</td>
 								</tr>
+								{{/each}}
 							</tbody>
 						</table>
 
@@ -80,43 +76,7 @@
 			</div>
 		</div>
 	</div>
-	<script>
-		$(function () {
-			let wrapper1 = $("#schoolWrapper");
-			let searchSpinner = $(".spinner");
-			function template(data) {
-				return (`<tr>
-					    <td><img style="height:70px; width:100px" src="/uploads/${data.uni.path}"   class="img-thumbnail" /></td>
-						<td><a href="/school-faculties/${data.uni.name}/${data.uni.id}">${data.uni.name}</a> <span title="Total number of faculties under ${data.uni.name}" class="badge badge-primary">${data.faculty.length} </span></td>
-						<td>${data.uni.City.name}</td>
-						<td><a href=/faculty/${data.faculty[0].id}/${data.uni.id}></a></td>
-						<td><img style="height:70px; width:200px" src="/uploads/${data.uni.banner}" class="img-thumbnail" /></td>
-						</tr>`)
-			}
 
-
-			function ajaxRequest() {
-				$.ajax({
-					type: "GET",
-					url: "/schools",
-					dataType: "json",
-					success: function (result) {
-						
-						let data = result.data;
-						wrapper1.empty();
-						data.forEach(data => {
-							wrapper1.append(template(data));
-						})
-
-					},
-					error: function (er) {
-
-					}
-				});
-			}
-			ajaxRequest();
-		});
-	</script>
 	<!-- coures end here -->
 
 
