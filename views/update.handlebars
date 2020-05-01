@@ -53,6 +53,7 @@
                         {{#if entity.studyArea}}
                         <form method="post" action="{{entity.url}}update">
                             <label for="password">Name</label>
+                             <input type="hidden" value="{{data.originalId}}" name="originalId" id="text" class="form-control">
                             <input type="hidden" value="{{data.id}}" name="id" id="text" class="form-control">
                             <!-- <div class="form-group">
                                        <select required name="institution" class="form-control">
@@ -269,7 +270,8 @@
         <!-- #END# Vertical Layout -->
     </div>
 </section>
-<script type="text/javascript" src="/js/tinymce/tinymce.min.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.2.1/tinymce.min.js"></script>
 <script type="text/javascript">
     tinymce.init({
         selector: 'textarea.richText',

@@ -21,11 +21,30 @@ module.exports.sender = function(username) {
 };
 
 module.exports.messageForAppStatus = function(recipient) {
-  return `Hi ${recipient}, <br/> You have a new notification regarding your application with Scotstudy. kindly login for the latest update`;
+  return `Hi ${recipient}, <br/> You have a new notification regarding your application with Scotstudy. Kindly login for the latest update`;
 };
 
 module.exports.messageForAppSubmission = function(recipient, status) {
-  return `Hi ${recipient}, <br/> Thank you for submitting your application, we will get back to you shortly.`;
+ const message= `
+
+Dear ${recipient},<br><br>
+
+Thank you for submitting your application.<br><br>
+
+We will assess your application and get back to you shortly.<br><br>
+
+In the meantime, feel free to contact us in case you have further enquiries. <br><br>
+
+Kind regards,<br><br>
+
+<p>Enquiry & Student Support Unit<br>
+Scotia World UK <br>
+D74, 10 Colinton Road<br>
+Edinburgh, Scotland<br>
+EH10 5DT<br>
+Email: info@scotstudy.co.uk<br>
+Whatsapp: (+44) 0758 677 0652</p>`
+  return message;
 };
 
 module.exports.send = function(recipient, subject, message) {

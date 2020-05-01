@@ -28,42 +28,50 @@
                         <div class="form-group form-float">
                             <label>Home Address *</label>
                             <div class="form-line">
-                                <textarea name="homeAddress" cols="30" rows="3" placeholder="home address"
+                                <textarea name="homeAddress" cols="30" rows="3" placeholder="Home address"
                                     class="form-control no-resize">{{app.homeAddress}}</textarea>
                             </div>
                         </div>
 
                         <div class="form-group form-float">
-                            <label>Postal address (if different)</label>
+                            <label>Postal address (if different from home address)</label>
                             <div class="form-line">
-                                <textarea name="postalAddress" cols="30" rows="3" placeholder="postal address"
+                                <textarea name="postalAddress" cols="30" rows="3" placeholder="Postal address"
                                     class="form-control no-resize">{{app.postalAddress}}</textarea>
                             </div>
                         </div>
-
-                        <div class="form-group form-float">
-                            <label>Telephone phone number*</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">phone_iphone</i>
-                                </span>
-                                <div class="form-line">
-                                    <input type="tel" name="phone" value="{{app.phone}}"
-                                        class="form-control mobile-phone-number" placeholder="Ex: +00 (000) 000-00-00"
-                                        required>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group form-float">
+                                    <label>Telephone phone number*</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">phone_iphone</i>
+                                        </span>
+                                        <div class="form-line">
+                                            <input type="number" name="phone" value="{{app.phone}}"
+                                                class="form-control mobile-phone-number" placeholder="Mobile number"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <!-- <input name="phone" value="{{app.phone}}" class="form-control mobile-phone-number" placeholder="telephone number" type="text" required> -->
                                 </div>
                             </div>
-                            <!-- <input name="phone" value="{{app.phone}}" class="form-control mobile-phone-number" placeholder="telephone number" type="text" required> -->
                         </div>
-                        <div class="form-group form-float">
-                            <label>Contact Email (Change if different)*</label>
-                            <div class="form-line">
-                                <input type="email" name="contactEmail" value="{{app.contactEmail}}"
-                                    class="form-control" required>
-                            </div>
-                            <!-- <input name=" phone" value="{{app.phone}}" class="form-control mobile-phone-number"
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group form-float">
+                                    <label>Contact email (change if different)</label>
+                                    <div class="form-line">
+                                        <input type="email" required name="contactEmail" value="{{app.contactEmail}}"
+                                            class="form-control" required>
+                                    </div>
+                                    <!-- <input name=" phone" value="{{app.phone}}" class="form-control mobile-phone-number"
                                     placeholder="telephone number" type="text" required> -->
+                                </div>
+                            </div>
                         </div>
+
                         <a href="/application/step1" type="button" class="btn bg-orange waves-effect">
                             <i class="material-icons">arrow_back</i> <span class="icon-name">back</span>
                         </a>

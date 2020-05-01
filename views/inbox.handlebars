@@ -26,7 +26,7 @@
                     <th>Sent by</th>
                     <th>Subject</th>
                     <th>Date</th>
-
+                    <th></th>
 
                   </tr>
                 </thead>
@@ -36,7 +36,8 @@
                     <td><img style="height: 30px; width:30px" src="/photos/{{this.senderPhoto}}" /> </td>
                     <td><a href="/user/inbox-view/{{this.id}}/{{this.senderName}}">{{this.senderName}}</a></td>
                     <td><a href="/user/inbox-view/{{this.id}}/{{this.senderName}}">{{this.subject}} </a></td>
-                    <td><a href="/user/inbox-view/{{this.id}}/{{this.senderName}}">{{this.createdAt}}</a> </td>
+                    <td><a href="/user/inbox-view/{{this.id}}/{{this.senderName}}">{{this.date}}</a> </td>
+                    <td><a href="/user/hide/{{this.id}}"><img style="height: 30px; width:30px" src="/fancy_buttons/delete.ico"/></a></td>
                   </tr>
                   {{/each}}
                 </tbody>

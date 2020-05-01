@@ -19,8 +19,10 @@
                             <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
                                     <tr>
+                                        <th></th>
                                         <th>Username</th>
                                         <th>Email</th>
+                                        <th>Date of reg.</th>
 
                                     </tr>
                                 </thead>
@@ -36,8 +38,10 @@
                                                  <img style="height:30px; width:30px" class="img-responsive thumbnail" src="/cancel.png">
                                              {{/if}}
                                            </td> --}}
+                                            <td>{{this.id}}</td>
                                         <td>{{this.username}}</td>
                                         <td>{{this.email}}</td>
+                                         <td>{{this.date}}</td>
 
 
                                     </tr>

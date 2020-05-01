@@ -169,3 +169,14 @@ module.exports.cpUploadHome = upload.fields([
   { name: "bottomLogo", maxCount: 1 },
   { name: "banner", maxCount: 8 }
 ]);
+
+module.exports.formatDate= (date)=> {
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  let ampm = hours >= 12 ? 'pm' : 'am';
+  let = hours % 12;
+  let = hours ? hours : 12; // the hour '0' should be '12'
+  let = minutes < 10 ? '0' + minutes : minutes;
+  let strTime = hours + ':' + minutes + ' ' + ampm;
+  return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " " + strTime;
+}

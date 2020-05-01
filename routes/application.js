@@ -1,14 +1,14 @@
-var express = require("express");
-var router = express.Router();
-var Application = require("../queries/query").Application;
-var Course = require("../queries/query").Course;
-var Qualification = require("../queries/query").Qualification;
-var Institution = require("../queries/query").Institution;
-var City = require("../queries/query").City;
-var Country = require("../queries/query").Country;
-var config = require("../my_modules/config");
-var ObjectID = require("mongodb").ObjectID;
-var Query = require("../queries/query");
+const express = require("express");
+const router = express.Router();
+const Application = require("../queries/query").Application;
+const Course = require("../queries/query").Course;
+const Qualification = require("../queries/query").Qualification;
+const Institution = require("../queries/query").Institution;
+const City = require("../queries/query").City;
+const Country = require("../queries/query").Country;
+const config = require("../my_modules/config");
+const ObjectID = require("mongodb").ObjectID;
+const Query = require("../queries/query");
 const mail = require("../my_modules/mailer");
 
 const url = require("url");
@@ -28,7 +28,7 @@ function getYear() {
   }
   return year;
 }
-router.post("/mobileStep1", async function(req, res, next) {
+router.post("/mobileStep1", async function (req, res, next) {
   let currentUserId = req.body.userId;
   let application = await Application.findByUser(currentUserId);
   let quali = await Qualification.findAll();
@@ -40,9 +40,9 @@ router.post("/mobileStep1", async function(req, res, next) {
   let getCourse = application
     ? await Query.Course.findById(application.courseId)
     : "";
-    console.log("getCourse---------------------------------")
-console.log(currentUserId)
-console.log("getCourse---------------------------------")
+  console.log("getCourse---------------------------------");
+  console.log(currentUserId);
+  console.log("getCourse---------------------------------");
   return res.send({
     //courses: course,
     quali: quali,
@@ -50,11 +50,11 @@ console.log("getCourse---------------------------------")
     course: getCourse,
     //institutions: institution,
     countries: country,
-    app: application
+    app: application,
   });
 });
 
-router.get("/step1", ensureAuthenticated, async function(req, res, next) {
+router.get("/step1", ensureAuthenticated, async function (req, res, next) {
   //if(req.user.roleId){
   let currentUserId = req.user.id;
 
@@ -75,12 +75,12 @@ router.get("/step1", ensureAuthenticated, async function(req, res, next) {
       institutions: institution,
       countries: country,
       app: application,
-      user: req.user
+      user: req.user,
     });
   }
 });
 
-router.get("/step2", ensureAuthenticated, async function(req, res, next) {
+router.get("/step2", ensureAuthenticated, async function (req, res, next) {
   //if(req.user.roleId){
   let currentUserId = req.user.id;
   let application = await Application.findByUser(currentUserId);
@@ -103,11 +103,11 @@ router.get("/step2", ensureAuthenticated, async function(req, res, next) {
       institutions: institution,
       countries: country,
       app: application,
-      user: req.user
+      user: req.user,
     });
 });
 
-router.get("/step3", ensureAuthenticated, async function(req, res, next) {
+router.get("/step3", ensureAuthenticated, async function (req, res, next) {
   //if(req.user.roleId){
   let currentUserId = req.user.id;
   let application = await Application.findByUser(currentUserId);
@@ -127,12 +127,12 @@ router.get("/step3", ensureAuthenticated, async function(req, res, next) {
       institutions: institution,
       countries: country,
       app: application,
-      user: req.user
+      user: req.user,
     });
   }
 });
 
-router.get("/step4", ensureAuthenticated, async function(req, res, next) {
+router.get("/step4", ensureAuthenticated, async function (req, res, next) {
   //if(req.user.roleId){
   let currentUserId = req.user.id;
   let application = await Application.findByUser(currentUserId);
@@ -152,11 +152,11 @@ router.get("/step4", ensureAuthenticated, async function(req, res, next) {
       institutions: institution,
       countries: country,
       app: application,
-      user: req.user
+      user: req.user,
     });
 });
 
-router.get("/step5", ensureAuthenticated, async function(req, res, next) {
+router.get("/step5", ensureAuthenticated, async function (req, res, next) {
   //if(req.user.roleId){
   let currentUserId = req.user.id;
   let application = await Application.findByUser(currentUserId);
@@ -176,27 +176,27 @@ router.get("/step5", ensureAuthenticated, async function(req, res, next) {
       institutions: institution,
       countries: country,
       app: application,
-      user: req.user
+      user: req.user,
     });
 });
 
-router.get("/applicationByUser/:id", ensureAuthenticated, function(
+router.get("/applicationByUser/:id", ensureAuthenticated, function (
   req,
   res,
   next
 ) {
   //if(req.user.roleId){
   let id = req.params.id;
-  Application.findByUser(id).then(application => {
+  Application.findByUser(id).then((application) => {
     res.render("finish", {
       layout: "layoutDashboard.handlebars",
       app: application,
-      user: req.user
+      user: req.user,
     });
   });
 });
 
-router.get("/finish", ensureAuthenticated, async function(req, res, next) {
+router.get("/finish", ensureAuthenticated, async function (req, res, next) {
   //if(req.user.roleId){
   let currentUserId = req.user.id;
   let country = await Country.findAll();
@@ -215,23 +215,47 @@ router.get("/finish", ensureAuthenticated, async function(req, res, next) {
       cities: city,
       institutions: institution,
       courses: courses,
-      user: req.user
+      user: req.user,
     });
   } else {
     res.redirect("/dashboard");
   }
 });
 
-router.get("/applicants", ensureAuthenticated, async function(req, res, next) {
-  let applications = await Application.findAll();
-  res.render("applicantList", {
-    layout: "layoutDashboard.handlebars",
-    app: applications,
-    user: req.user
-  });
+router.get("/applicants", ensureAuthenticated, async (req, res) => {
+  try {
+    let applications = await Application.findAll();
+    let id = 1;
+
+    const getApplicants = applications.map((app, idx, apps) => {
+      const fullName = `${app.firstname} ${app.middlename} ${app.lastname}`;
+
+      let mappedApplication = {
+        serial: id++,
+        id: app.id,
+        fullName: fullName,
+        status: app.hasSubmitted,
+        decision: app.decision,
+        userId: app.User ? app.User.id : "",
+        date: config.formatDate(app.createdAt),
+      };
+
+      //mappedApplication.id = id++;
+      //mappedApplication.createdAt = config.formatDate(applicant.createdAt);
+      return mappedApplication;
+    });
+
+    res.render("applicantList", {
+      layout: "layoutDashboard.handlebars",
+      app: getApplicants,
+      user: req.user,
+    });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
-router.get("/read-Application", ensureAuthenticated, async function(
+router.get("/read-Application", ensureAuthenticated, async function (
   req,
   res,
   next
@@ -240,19 +264,19 @@ router.get("/read-Application", ensureAuthenticated, async function(
   res.render("readApplication", {
     layout: "layoutDashboard.handlebars",
     app: applications,
-    user: req.user
+    user: req.user,
   });
 });
 
-router.get("/Update/:id", ensureAuthenticated, function(req, res, next) {
+router.get("/Update/:id", ensureAuthenticated, function (req, res, next) {
   let id = req.params.id;
-  Application.findById(id).then(data => {
+  Application.findById(id).then((data) => {
     res.render("update", {
       layout: "layoutDashboard.handlebars",
       user: req.user,
       data: data,
       user: req.user,
-      entity: entityName
+      entity: entityName,
     });
   });
 });
@@ -263,18 +287,31 @@ router.get("/Update/:id", ensureAuthenticated, function(req, res, next) {
 //
 // });
 
-router.get("/delete/:id", ensureAuthenticated, function(req, res, next) {
+router.get("/delete/:id", ensureAuthenticated, function (req, res, next) {
   let id = req.params.id;
-  Application.delete(id).then(data => {
+  Application.delete(id).then((data) => {
     res.redirect("/listing");
   });
+});
+
+router.get("/hide/:id", ensureAuthenticated, async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    const getApplication = await Query.Application.findById(id);
+    if(getApplication)
+    await Query.Application.update({hasDeleted:true}, id);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    res.redirect("/application/applicants");
+  }
 });
 
 router.post(
   "/finalSubmit",
   config.cpUpload2,
   ensureAuthenticated,
-  async function(req, res, next) {
+  async function (req, res, next) {
     let applicationId = req.body.id;
     let firstname = req.body.firstname;
     let middlename = req.body.middlename;
@@ -366,24 +403,19 @@ router.post(
       credential: img,
       moreInfo: moreInfo,
       hasSubmitted: true,
-      decision: "PENDING"
+      decision: "PENDING",
     };
 
     let getApplication = await Query.Application.findByUser(userId);
     if (applicationId) {
-      Application.update(newApplication, applicationId).then(app => {
-        mail.send(
-          getApplication.contactEmail,
-          mail.applicationSubject(),
-          mail.messageForAppSubmission(getApplication.firstname)
-        );
+      Application.update(newApplication, applicationId).then((app) => {
         req.flash("success_msg", "Application submission was successful");
         res.redirect("/application/finish");
       });
 
       res.render("applicationMsg", {
         layout: "layoutDashboard.handlebars",
-        user: req.user
+        user: req.user,
       });
     } else {
       throw new Error("Application error ocuured");
@@ -391,7 +423,7 @@ router.post(
   }
 );
 
-router.post("/decision", ensureAuthenticated, function(req, res, next) {
+router.post("/decision", ensureAuthenticated, function (req, res, next) {
   let applicationId = req.body.id;
   //let userId = req.body.userId;
   var decision = req.body.decision;
@@ -403,7 +435,7 @@ router.post("/decision", ensureAuthenticated, function(req, res, next) {
   let hasPaid = req.body.hasPaid ? true : false;
   let hasCas = req.body.hasCas ? true : false;
 
-  Application.findById(applicationId).then(data => {
+  Application.findById(applicationId).then((data) => {
     var newApplication = {
       id: applicationId,
       decision: decision,
@@ -413,11 +445,11 @@ router.post("/decision", ensureAuthenticated, function(req, res, next) {
       hasPaid: hasPaid,
       hasCas: hasCas,
       eligibilityCheck: eligibilityCheck,
-      reasonOfRefusal: reason
+      reasonOfRefusal: reason,
     };
 
     if (data) {
-      Application.update(newApplication, applicationId).then(app => {
+      Application.update(newApplication, applicationId).then((app) => {
         mail.send(
           data.contactEmail,
           mail.applicationSubject(),
@@ -428,7 +460,7 @@ router.post("/decision", ensureAuthenticated, function(req, res, next) {
     }
   });
 });
-router.post("/form1", ensureAuthenticated, function(req, res, next) {
+router.post("/form1", ensureAuthenticated, function (req, res, next) {
   var firstname = req.body.firstname;
   var middlename = req.body.middlename;
   var lastname = req.body.lastname;
@@ -450,16 +482,16 @@ router.post("/form1", ensureAuthenticated, function(req, res, next) {
     dob: dob,
     marital: marital,
     gender: gender,
-    userId: userId
+    userId: userId,
   };
 
   if (applicationId) {
-    Application.update(newApplication, applicationId).then(application => {
+    Application.update(newApplication, applicationId).then((application) => {
       // req.flash('error_msg', 'Something went wrong trying to save the data');
       // res.redirect("/application/step1");
     });
   } else {
-    Application.create(newApplication).then(data => {
+    Application.create(newApplication).then((data) => {
       // req.flash('error_msg', 'Something went wrong trying to save the data');
       // res.redirect("/application/step1");
     });
@@ -468,7 +500,7 @@ router.post("/form1", ensureAuthenticated, function(req, res, next) {
   res.redirect("/application/step2");
 });
 
-router.post("/mobileForm1", async function(req, res, next) {
+router.post("/mobileForm1", async function (req, res, next) {
   var dataObject;
 
   let isError = false;
@@ -479,9 +511,13 @@ router.post("/mobileForm1", async function(req, res, next) {
   var lastname = req.body.lastname;
   var courseId = req.body.courseId;
   var getCourseById = await Query.Course.findById(courseId);
-  console.log("----------------------------------------------------------------------")
-  console.log(courseId)
-  console.log("----------------------------------------------------------------------")
+  console.log(
+    "----------------------------------------------------------------------"
+  );
+  console.log(courseId);
+  console.log(
+    "----------------------------------------------------------------------"
+  );
   var course1 = getCourseById.name;
   var course2 = getCourseById.name;
   var level = getCourseById.DegreeType.name;
@@ -512,7 +548,7 @@ router.post("/mobileForm1", async function(req, res, next) {
       schoolWish2: schoolWish2,
       courseId: courseId,
       marital: marital,
-      gender: gender
+      gender: gender,
     };
     if (applicationId) {
       dataObject = await Application.update(newApplication, applicationId);
@@ -528,11 +564,11 @@ router.post("/mobileForm1", async function(req, res, next) {
   return res.send({
     error: isError,
     message: apiMsg(isError),
-    app: getApplication
+    app: getApplication,
   });
 });
 
-router.post("/form2", ensureAuthenticated, function(req, res, next) {
+router.post("/form2", ensureAuthenticated, function (req, res, next) {
   let homeAddress = req.body.homeAddress;
   let postalAddress = req.body.postalAddress;
   let phone = req.body.phone;
@@ -546,26 +582,26 @@ router.post("/form2", ensureAuthenticated, function(req, res, next) {
     homeAddress: homeAddress,
     postalAddress: postalAddress,
     contactEmail: contactEmail,
-    phone: phone
+    phone: phone,
   };
 
   if (applicationId) {
     newApplication.id = applicationId;
     Application.update(newApplication, applicationId)
-      .then(application => {
+      .then((application) => {
         // req.flash('error_msg', 'Something went wrong trying to save the data');
         // res.render("step2");
       })
-      .catch(error => {
+      .catch((error) => {
         isError = true;
       });
   } else {
     Application.create(newApplication)
-      .then(data => {
+      .then((data) => {
         // req.flash('error_msg', 'Something went wrong trying to save the data');
         // res.render("/application/step2");
       })
-      .catch(error => {
+      .catch((error) => {
         isError = true;
       });
   }
@@ -576,7 +612,7 @@ router.post("/form2", ensureAuthenticated, function(req, res, next) {
   }
 });
 
-router.post("/mobileForm2", async function(req, res, next) {
+router.post("/mobileForm2", async function (req, res, next) {
   var dataObject;
   var homeAddress = req.body.homeAddress;
   var postalAddress = req.body.postalAddress;
@@ -592,7 +628,7 @@ router.post("/mobileForm2", async function(req, res, next) {
       homeAddress: homeAddress,
       contactEmail: contactEmail,
       postalAddress: postalAddress,
-      phone: phone
+      phone: phone,
     };
 
     if (applicationId) {
@@ -608,11 +644,11 @@ router.post("/mobileForm2", async function(req, res, next) {
   return res.send({
     error: isError,
     message: apiMsg(isError),
-    app: getApplication
+    app: getApplication,
   });
 });
 
-router.put("/removeApplication/:id", async function(req, res, next) {
+router.put("/removeApplication/:id", async function (req, res, next) {
   let userId = req.body.userId;
 
   let applicationId = req.params.id;
@@ -621,7 +657,7 @@ router.put("/removeApplication/:id", async function(req, res, next) {
     var newApplication = {
       hasDeleted: true,
       userId: userId,
-      id: applicationId
+      id: applicationId,
     };
 
     if (applicationId) {
@@ -635,11 +671,11 @@ router.put("/removeApplication/:id", async function(req, res, next) {
   return res.send({
     error: isError,
     message: apiMsg(isError),
-    app: getApplication
+    app: getApplication,
   });
 });
 
-router.post("/form3", ensureAuthenticated, function(req, res, next) {
+router.post("/form3", ensureAuthenticated, function (req, res, next) {
   var applicationId = req.body.id;
 
   var hQualification = req.body.hQualification;
@@ -670,20 +706,20 @@ router.post("/form3", ensureAuthenticated, function(req, res, next) {
     pProgrammeYear: pProgrammeYear,
     highSchoolName: highSchoolName,
     completionYr: completionYr,
-    englishTest: englishTest
+    englishTest: englishTest,
   };
 
   if (applicationId) {
     newApplication.id = applicationId;
 
-    Application.update(newApplication, applicationId).then(application => {});
+    Application.update(newApplication, applicationId).then((application) => {});
   } else {
-    Application.create(newApplication).then(data => {});
+    Application.create(newApplication).then((data) => {});
   }
   res.redirect("/application/step4");
 });
 
-router.post("/mobileForm3", async function(req, res, next) {
+router.post("/mobileForm3", async function (req, res, next) {
   var dataObject;
   var applicationId = req.body.id;
   let isError = false;
@@ -717,7 +753,7 @@ router.post("/mobileForm3", async function(req, res, next) {
       pProgrammeYear: pProgrammeYear,
       highSchoolName: highSchoolName,
       completionYr: completionYr,
-      englishTest: englishTest
+      englishTest: englishTest,
     };
 
     if (applicationId) {
@@ -734,12 +770,18 @@ router.post("/mobileForm3", async function(req, res, next) {
   return res.send({
     error: isError,
     message: apiMsg(isError),
-    app: getApplication
+    app: getApplication,
   });
 });
 
-router.post("/form4", ensureAuthenticated, function(req, res, next) {
+router.post("/form4", ensureAuthenticated, function (req, res, next) {
   var applicationId = req.body.id;
+  const course1 = req.body.course1;
+  const course2 = req.body.course2;
+  const schoolWish1 = req.body.schoolWish1;
+  const schoolWish2 = req.body.schoolWish2;
+  const city = req.body.cityOfChoice;
+  const level = req.body.level;
 
   var sponsor = req.body.sponsor;
   var sponsorName = req.body.sponsorName;
@@ -748,23 +790,29 @@ router.post("/form4", ensureAuthenticated, function(req, res, next) {
 
   var newApplication = {
     userId: req.user.id,
+    cityId:city,
+    course1 :course1,
+    course2: course2,
+    schoolWish1:schoolWish1,
+    schoolWish2:schoolWish2,
+    level:level,
     sponsor: sponsor,
     sponsorName: sponsorName,
     sponsorOccupation: sponsorOccupation,
-    budget: budget
+    budget: budget,
   };
 
   if (applicationId) {
     newApplication.id = applicationId;
-    Application.update(newApplication, applicationId).then(image => {});
+    Application.update(newApplication, applicationId).then((image) => {});
   } else {
-    Application.create(newApplication).then(data => {});
+    Application.create(newApplication).then((data) => {});
   }
 
   res.redirect("/application/step5");
 });
 
-router.post("/mobileForm4", async function(req, res, next) {
+router.post("/mobileForm4", async function (req, res, next) {
   var dataObject;
   var applicationId = req.body.id;
 
@@ -780,7 +828,7 @@ router.post("/mobileForm4", async function(req, res, next) {
       sponsor: sponsor,
       sponsorName: sponsorName,
       sponsorOccupation: sponsorOccupation,
-      budget: budget
+      budget: budget,
     };
 
     if (applicationId) {
@@ -797,10 +845,10 @@ router.post("/mobileForm4", async function(req, res, next) {
   return res.send({
     error: isError,
     message: apiMsg(isError),
-    app: getApplication
+    app: getApplication,
   });
 });
-router.post("/mobileForm6", config.cpUpload2, async function(req, res, next) {
+router.post("/mobileForm6", config.cpUpload2, async function (req, res, next) {
   var dataObject;
   let isError = false;
   let applicationId = req.body.id;
@@ -812,7 +860,7 @@ router.post("/mobileForm6", config.cpUpload2, async function(req, res, next) {
         : req.files["credential"][0].filename;
     let newApplication = {
       userId: userId,
-      credential: img
+      credential: img,
     };
     if (applicationId) {
       newApplication.id = applicationId;
@@ -828,11 +876,11 @@ router.post("/mobileForm6", config.cpUpload2, async function(req, res, next) {
   return res.send({
     error: isError,
     message: apiMsg(isError),
-    app: getApplication
+    app: getApplication,
   });
 });
 
-router.post("/mobileSubmission", async function(req, res, next) {
+router.post("/mobileSubmission", async function (req, res, next) {
   var dataObject;
   let isError = false;
   let applicationId = req.body.id;
@@ -842,7 +890,7 @@ router.post("/mobileSubmission", async function(req, res, next) {
     userId: userId,
     id: applicationId,
     hasSubmitted: true,
-    decision: "PENDING"
+    decision: "PENDING",
   };
   let getApplication = await Query.Application.findByUser(userId);
   if (applicationId) {
@@ -860,11 +908,11 @@ router.post("/mobileSubmission", async function(req, res, next) {
   return res.send({
     error: isError,
     message: apiMsg(isError),
-    app: getApplication
+    app: getApplication,
   });
 });
 
-router.post("/form5", config.cpUpload2, ensureAuthenticated, function(
+router.post("/form5", config.cpUpload2, ensureAuthenticated, function (
   req,
   res,
   next
@@ -885,7 +933,7 @@ router.post("/form5", config.cpUpload2, ensureAuthenticated, function(
     purpose: purpose,
     reasonOfRefusal: reasonOfRefusal,
     credential: img,
-    moreInfo: moreInfo
+    moreInfo: moreInfo,
   };
 
   if (applicationId) {
@@ -899,7 +947,7 @@ router.post("/form5", config.cpUpload2, ensureAuthenticated, function(
   res.redirect("/application/finish");
 });
 
-router.post("/mobileForm5", async function(req, res) {
+router.post("/mobileForm5", async function (req, res) {
   var dataObject;
   let applicationId = req.body.id;
   let hasApplied = req.body.hasApplied;
@@ -930,7 +978,7 @@ router.post("/mobileForm5", async function(req, res) {
     cityId: cityOfChoice,
     schoolWish1: schoolWish1,
     schoolWish2: schoolWish2,
-    courseId: courseId
+    courseId: courseId,
     //hasSubmitted: true,
     //decision: "PENDING"
   };
@@ -948,7 +996,7 @@ router.post("/mobileForm5", async function(req, res) {
   return res.send({
     error: isError,
     message: apiMsg(isError),
-    app: getApplication
+    app: getApplication,
   });
 });
 

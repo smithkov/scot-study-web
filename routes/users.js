@@ -36,27 +36,27 @@ var myClient = new OneSignal.Client({
   // note that "app" must have "appAuthKey" and "appId" keys
   app: {
     appAuthKey: "OWNjNDg3YzMtMTkzYi00MWZlLTgzNWQtMThlNzlhOGQwNzVm",
-    appId: "0bf3e865-0144-4221-a007-94c89b37ac63"
-  }
+    appId: "0bf3e865-0144-4221-a007-94c89b37ac63",
+  },
 });
 
 // Register
-router.get("/register", function(req, res) {
+router.get("/register", function (req, res) {
   res.render("register");
 });
 
-router.get("/photo", ensureAuthenticated, function(req, res) {
+router.get("/photo", ensureAuthenticated, function (req, res) {
   let photo = config.photoChooser(req.user.photo);
   let user = req.user;
   user.photo = photo;
   res.render("photo", {
     layout: "layoutDashboard.handlebars",
-    user: user
+    user: user,
   });
 });
 
 // Login
-router.get(config.login, recaptcha.middleware.render, function(req, res) {
+router.get(config.login, recaptcha.middleware.render, function (req, res) {
   // var firstNotification = new OneSignal.Notification({
   //   contents: {
   //     en: "Test notification",
@@ -80,7 +80,7 @@ router.get(config.login, recaptcha.middleware.render, function(req, res) {
   else res.render("login", { captcha: res.recaptcha });
 });
 
-router.post("/photo", config.photo.single("file"), async function(req, res) {
+router.post("/photo", config.photo.single("file"), async function (req, res) {
   var id = req.body.userId;
   var filename = null;
 
@@ -91,7 +91,7 @@ router.post("/photo", config.photo.single("file"), async function(req, res) {
     let update = await Query.User.update(
       {
         id: id,
-        photo: filename
+        photo: filename,
       },
       id
     );
@@ -104,22 +104,22 @@ router.post(
   passport.authenticate("local", {
     successRedirect: "/dashboard",
     failureRedirect: config.loginRedirect,
-    failureFlash: true
+    failureFlash: true,
   }),
-  function(req, res, next) {
+  function (req, res, next) {
     res.redirect("/dashboard");
   }
 );
 
-router.post("/mobileLogin", async function(req, res) {
+router.post("/mobileLogin", async function (req, res) {
   let username = req.body.username;
   let password = req.body.password;
-  User.findOne({ where: { username: username } }).then(async function(user) {
+  User.findOne({ where: { username: username } }).then(async function (user) {
     if (user) {
       var passwordIsValid = bcrypt.compareSync(password, user.password);
       if (passwordIsValid) {
         let token = jwt.sign({ username: username }, process.env.secret, {
-          expiresIn: "24h" // expires in 24 hours
+          expiresIn: "24h", // expires in 24 hours
         });
         let application = await Query.Application.findByUser(user.id);
 
@@ -128,20 +128,20 @@ router.post("/mobileLogin", async function(req, res) {
           user: user,
           app: application,
           message: "Authentication successful!",
-          token: token
+          token: token,
         });
       } else {
         res.json({
           success: false,
           user: null,
           message: "Authentication failed!",
-          token: null
+          token: null,
         });
       }
     }
   });
 });
-router.post("/mobileRegister", async function(req, res) {
+router.post("/mobileRegister", async function (req, res) {
   var email = req.body.email;
   var username = req.body.username;
   var password = req.body.password;
@@ -151,28 +151,28 @@ router.post("/mobileRegister", async function(req, res) {
     email: email,
     username: username,
     password: password,
-    roleId: false
+    roleId: false,
   };
 
   //checking for email and username are already taken
   let mailExist = await User.findOne({ where: { email: email } });
   let userExist = await User.findOne({ where: { username: username } });
   if (!mailExist && !userExist) {
-    bcrypt.genSalt(4, function(err, salt) {
-      bcrypt.hash(newUser.password, salt, function(err, hash) {
+    bcrypt.genSalt(4, function (err, salt) {
+      bcrypt.hash(newUser.password, salt, function (err, hash) {
         newUser.password = hash;
         // create that user as no one by that username exists
-        User.create(newUser).then(function(user) {
+        User.create(newUser).then(function (user) {
           if (user) {
             let token = jwt.sign({ username: username }, process.env.secret, {
-              expiresIn: "24h" // expires in 24 hours
+              expiresIn: "24h", // expires in 24 hours
             });
 
             res.json({
               success: true,
               message: "Registration Successful!",
               token: token,
-              user: user
+              user: user,
             });
           }
         });
@@ -183,17 +183,17 @@ router.post("/mobileRegister", async function(req, res) {
     res.json({
       success: false,
       message: "Email already exist!",
-      token: null
+      token: null,
     });
   } else if (userExist) {
     res.json({
       success: false,
       message: "Username already exist!",
-      token: null
+      token: null,
     });
   }
 });
-router.post("/mobileChangePassword", async function(req, res) {
+router.post("/mobileChangePassword", async function (req, res) {
   let isError = false;
   let username = req.body.username;
   let oldPassword = req.body.oldPassword;
@@ -204,15 +204,15 @@ router.post("/mobileChangePassword", async function(req, res) {
   if (userExist) {
     let passwordIsValid = bcrypt.compareSync(oldPassword, userExist.password);
     if (passwordIsValid) {
-      bcrypt.genSalt(4, function(err, salt) {
-        bcrypt.hash(newPassword, salt, function(err, hash) {
+      bcrypt.genSalt(4, function (err, salt) {
+        bcrypt.hash(newPassword, salt, function (err, hash) {
           var newUser = {
             id: userExist.id,
             username: userExist.username,
-            password: hash
+            password: hash,
           };
 
-          Query.User.update(newUser, newUser.id).then(update => {
+          Query.User.update(newUser, newUser.id).then((update) => {
             res.json(response(isError));
           });
         });
@@ -227,7 +227,7 @@ router.post("/mobileChangePassword", async function(req, res) {
   }
 });
 
-router.post("/change-Password", ensureAuthenticated, async function(req, res) {
+router.post("/change-Password", ensureAuthenticated, async function (req, res) {
   let oldPass = req.body.oldPass;
   let newPass = req.body.newPass;
   let newPass2 = req.body.newPass2;
@@ -239,14 +239,14 @@ router.post("/change-Password", ensureAuthenticated, async function(req, res) {
     if (userExist) {
       let passwordIsValid = bcrypt.compareSync(oldPass, userExist.password);
       if (passwordIsValid) {
-        bcrypt.genSalt(4, function(err, salt) {
-          bcrypt.hash(newPass, salt, function(err, hash) {
+        bcrypt.genSalt(4, function (err, salt) {
+          bcrypt.hash(newPass, salt, function (err, hash) {
             var newUser = {
               id: userExist.id,
-              password: hash
+              password: hash,
             };
 
-            Query.User.update(newUser, newUser.id).then(update => {
+            Query.User.update(newUser, newUser.id).then((update) => {
               //res.json(response(isError));
             });
           });
@@ -270,15 +270,15 @@ function response(isError) {
     message: isError
       ? "Old password did not match"
       : "Password was changed successfully.",
-    token: null
+    token: null,
   };
 }
 
-router.get("/logout", function(req, res) {
+router.get("/logout", function (req, res) {
   req.logout();
   res.redirect(config.loginRedirect);
 });
-router.post("/register", async function(req, res) {
+router.post("/register", async function (req, res) {
   var email = req.body.email;
   var username = req.body.username;
   var password = req.body.password;
@@ -288,17 +288,17 @@ router.post("/register", async function(req, res) {
     email: email,
     username: username,
     password: password,
-    roleId: false
+    roleId: false,
   };
   //checking for email and username are already taken
   let mailExist = await User.findOne({ where: { email: email } });
   let userExist = await User.findOne({ where: { username: username } });
   if (!mailExist && !userExist) {
-    bcrypt.genSalt(4, function(err, salt) {
-      bcrypt.hash(newUser.password, salt, function(err, hash) {
+    bcrypt.genSalt(4, function (err, salt) {
+      bcrypt.hash(newUser.password, salt, function (err, hash) {
         newUser.password = hash;
         // create that user as no one by that username exists
-        User.create(newUser).then(function(user) {
+        User.create(newUser).then(function (user) {
           if (user) {
             req.flash("success_msg", "You are registered and can now login");
             res.redirect(config.loginRedirect);
@@ -310,20 +310,20 @@ router.post("/register", async function(req, res) {
     // there's already someone with that username
     res.render("register", {
       username: userExist ? true : false,
-      mail: mailExist ? true : false
+      mail: mailExist ? true : false,
     });
   }
 });
 
 passport.use(
-  new LocalStrategy(async function(username, password, done) {
+  new LocalStrategy(async function (username, password, done) {
     let user = await Query.User.findByUsername(username);
 
     if (!user) {
       return done(null, false, { message: "Unknown User" });
     }
 
-    Query.comparePassword(password, user.password, function(err, isMatch) {
+    Query.comparePassword(password, user.password, function (err, isMatch) {
       if (err) throw err;
       if (isMatch) {
         return done(null, user);
@@ -334,12 +334,12 @@ passport.use(
   })
 );
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
   done(null, user.id);
 });
 
-passport.deserializeUser(function(id, done) {
-  Query.User.findById(id).then(user => {
+passport.deserializeUser(function (id, done) {
+  Query.User.findById(id).then((user) => {
     done(null, user);
   });
 });
@@ -388,7 +388,7 @@ router.post("/sendAdminMessage", async (req, res) => {
         isPublic: false,
         hasRead: false,
         hasReadAdmin: false,
-        hasDelete: false
+        hasDelete: false,
       });
     } else {
       isError = true;
@@ -400,7 +400,7 @@ router.post("/sendAdminMessage", async (req, res) => {
   }
 
   return res.send({
-    error: isError
+    error: isError,
   });
 });
 
@@ -409,7 +409,7 @@ router.post("/markAsRead", async (req, res) => {
   let messageId = req.body.messageId;
   let msg = {
     id: messageId,
-    hasRead: true
+    hasRead: true,
   };
   try {
     var getMessage = await Query.Mail.update(msg, messageId);
@@ -418,7 +418,7 @@ router.post("/markAsRead", async (req, res) => {
   }
 
   return res.send({
-    error: isError
+    error: isError,
   });
 });
 
@@ -436,19 +436,19 @@ router.post("/getUsernames", async (req, res) => {
         label: getApplication
           ? users[i].username +
             ` (${getApplication.firstname} ${getApplication.lastname})`
-          : users[i].username + ` (${users[i].email})`
+          : users[i].username + ` (${users[i].email})`,
       });
     }
 
     return res.send({
       data: users,
       users: userArray,
-      error: false
+      error: false,
     });
   } catch (err) {
     return res.send({
       data: null,
-      error: err
+      error: err,
     });
   }
 });
@@ -465,7 +465,7 @@ router.get("/sentMessages", ensureAuthenticated, async (req, res) => {
   res.render("sentMessage", {
     layout: "layoutDashboard.handlebars",
     user: req.user,
-    data: newMessages
+    data: newMessages,
   });
 });
 //get sent messages for mobile users
@@ -476,21 +476,21 @@ router.post("/getSentMessages", async (req, res) => {
   var getMessage = await Query.Mail.findSentMessages(senderId);
 
   return res.send({
-    data: getMessage
+    data: getMessage,
   });
 });
 
 //this is get route for creating a new message
-router.get("/compose", ensureAuthenticated, async function(req, res, next) {
+router.get("/compose", ensureAuthenticated, async function (req, res, next) {
   res.render("compose", {
     layout: "layoutDashboard.handlebars",
-    user: req.user
+    user: req.user,
   });
 
   //  res.render('list',{layout: 'layoutDashboard.handlebars',entity:entityName});
 });
 //this route basically gets messages by user for web app users
-router.get("/inbox", ensureAuthenticated, async function(req, res, next) {
+router.get("/inbox", ensureAuthenticated, async function (req, res, next) {
   let message = await Query.Mail.findByUserId(req.user);
   var newMessages = [];
   for (var i = 0; message.length > i; i++) {
@@ -499,38 +499,56 @@ router.get("/inbox", ensureAuthenticated, async function(req, res, next) {
     message[i].senderName = user.username;
     newMessages.push(message[i]);
   }
-
+  const mappedMessage = newMessages.map((msg) => {
+    return {
+      senderName: msg.senderName,
+      id: msg.id,
+      senderPhoto: msg.senderPhoto,
+      subject: msg.subject,
+      date: config.formatDate(msg.createdAt),
+    };
+  });
   res.render("inbox", {
     layout: "layoutDashboard.handlebars",
     user: req.user,
-    data: newMessages
+    data: mappedMessage,
   });
 
   //  res.render('list',{layout: 'layoutDashboard.handlebars',entity:entityName});
 });
-
-router.get("/myAccount", ensureAuthenticated, async function(req, res, next) {
+router.get("/hide/:id", ensureAuthenticated, async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    const getMail = await Query.Mail.findById(id);
+    if (getMail) await Query.Mail.update({ hasDelete: true }, id);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    res.redirect("/user/inbox");
+  }
+});
+router.get("/myAccount", ensureAuthenticated, async function (req, res, next) {
   res.render("account", {
     layout: "layoutDashboard.handlebars",
-    user: req.user
+    user: req.user,
   });
 
   //  res.render('list',{layout: 'layoutDashboard.handlebars',entity:entityName});
 });
 
-router.get("/change-Password", ensureAuthenticated, async function(
+router.get("/change-Password", ensureAuthenticated, async function (
   req,
   res,
   next
 ) {
   res.render("changePassword", {
     layout: "layoutDashboard.handlebars",
-    user: req.user
+    user: req.user,
   });
 });
 
 //this route basically gets messages by user for web app users
-router.get("/inbox-view/:id/:sender", ensureAuthenticated, async function(
+router.get("/inbox-view/:id/:sender", ensureAuthenticated, async function (
   req,
   res,
   next
@@ -540,12 +558,13 @@ router.get("/inbox-view/:id/:sender", ensureAuthenticated, async function(
   if (!messageId) throw new Error("The message may have been deleted!");
 
   letGetMessageById = await Query.Mail.findById(messageId);
-
+  if (letGetMessageById)
+    await Query.Mail.update({ hasReadAdmin: true }, letGetMessageById.id);
   res.render("inbox-read", {
     layout: "layoutDashboard.handlebars",
     user: req.user,
     senderName: sender,
-    message: letGetMessageById
+    message: letGetMessageById,
   });
 
   //  res.render('list',{layout: 'layoutDashboard.handlebars',entity:entityName});
@@ -566,7 +585,7 @@ router.post("/getMessageByUser", async (req, res) => {
     newMessages.push(message[i]);
   }
   return res.send({
-    data: newMessages
+    data: newMessages,
   });
 });
 //Admin sends message to users
@@ -584,7 +603,7 @@ router.post("/sendMessage", async (req, res) => {
     hasRead: false,
     senderId: senderId,
     hasReadAdmin: true,
-    hasDelete: false
+    hasDelete: false,
   };
   try {
     if (isAllUsers) {
@@ -605,29 +624,29 @@ router.post("/sendMessage", async (req, res) => {
   }
 
   return res.send({
-    error: isError
+    error: isError,
   });
 });
 
-router.get("/all", ensureAuthenticated, function(req, res, next) {
-  // if(req.user.roleId){
-  //   StudyArea.getAll(function(err,data){
-  //     if(err){
-  //       throw err;
-  //     }
-  //      res.render('list',{layout: 'layoutDashboard.handlebars',data:data,user:req.user, entity:entityName});
-  //   })
-  // }
-  // else{
-  //   res.redirect("/login");
-  // }
-  Query.User.findAll().then(users => {
-    res.render("userList", {
-      layout: "layoutDashboard.handlebars",
-      user: req.user,
-      users: users
-    });
+router.get("/all", ensureAuthenticated, async function (req, res, next) {
+  let id = 0;
+  const findUsers = await Query.User.findAll();
+  const getUsers = findUsers.map((user) => {
+    id++;
+    return {
+      id: id,
+      username: user.username,
+      date: config.formatDate(user.createdAt),
+      email: user.email,
+    };
   });
+
+  res.render("userList", {
+    layout: "layoutDashboard.handlebars",
+    user: req.user,
+    users: getUsers,
+  });
+
   //  res.render('list',{layout: 'layoutDashboard.handlebars',entity:entityName});
 });
 

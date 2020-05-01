@@ -51,7 +51,7 @@ module.exports = {
     },
     delete: function (id) {
       return Banner.destroy({ where: { id: id } });
-    }
+    },
   },
   FeeRange: {
     create: function (obj) {
@@ -66,18 +66,17 @@ module.exports = {
     },
     findByFaculty: function (institutionId, studyId) {
       return FeeRange.findOne({
-        where: { studyAreaId: studyId, institutionId: institutionId }
+        where: { studyAreaId: studyId, institutionId: institutionId },
       });
     },
     update: function (obj, id) {
       return FeeRange.update(obj, { where: { id: id } });
-    }
+    },
   },
   CacheFaculty: {
-
     findAll: function () {
       return CacheFaculty.findAll();
-    }
+    },
   },
   SurrogateFaculty: {
     create: function (obj) {
@@ -85,13 +84,13 @@ module.exports = {
     },
     findById: function (id) {
       return SurrogateFaculty.findByPk(id, {
-        include: [{ all: true }]
+        include: [{ all: true }],
       });
     },
     findByInstitution: function (id) {
       return SurrogateFaculty.findAll({
         where: { institutionId: id },
-        include: [{ all: true }]
+        include: [{ all: true }],
       });
     },
     findAll: function () {
@@ -99,7 +98,7 @@ module.exports = {
     },
     update: function (obj, id) {
       return SurrogateFaculty.update(obj, { where: { id: id } });
-    }
+    },
   },
   Departure: {
     create: function (obj) {
@@ -116,7 +115,7 @@ module.exports = {
     },
     delete: function (id) {
       return Departure.destroy({ where: { id: id } });
-    }
+    },
   },
   FacultyImage: {
     create: function (obj) {
@@ -134,12 +133,12 @@ module.exports = {
     findByStudyArea: function (id) {
       return FacultyImage.findAll({
         where: { studyAreaId: id },
-        include: [{ all: true }]
+        include: [{ all: true }],
       });
     },
     delete: function (id) {
       return FacultyImage.destroy({ where: { id: id } });
-    }
+    },
   },
   Guideline: {
     create: function (obj) {
@@ -156,7 +155,7 @@ module.exports = {
     },
     delete: function (id) {
       return Guideline.destroy({ where: { id: id } });
-    }
+    },
   },
   Country: {
     create: function (obj) {
@@ -176,11 +175,11 @@ module.exports = {
     },
     findByName: function (name) {
       return Country.findOne({
-        where: { name: name }
-      }).then(data => {
+        where: { name: name },
+      }).then((data) => {
         return data.id;
       });
-    }
+    },
   },
   Qualification: {
     create: function (obj) {
@@ -197,7 +196,7 @@ module.exports = {
     },
     delete: function (id) {
       return Qualification.destroy({ where: { id: id } });
-    }
+    },
   },
   DegreeType: {
     create: function (obj) {
@@ -214,7 +213,7 @@ module.exports = {
     },
     delete: function (id) {
       return DegreeType.destroy({ where: { id: id } });
-    }
+    },
   },
   City: {
     findAll: function () {
@@ -231,7 +230,7 @@ module.exports = {
     },
     delete: function (id) {
       return City.destroy({ where: { id: id } });
-    }
+    },
   },
   Scholarship: {
     findAll: function () {
@@ -248,7 +247,7 @@ module.exports = {
     },
     delete: function (id) {
       return Scholarship.destroy({ where: { id: id } });
-    }
+    },
   },
   Logo: {
     findAll: function () {
@@ -265,17 +264,17 @@ module.exports = {
     },
     delete: function (id) {
       return Logo.destroy({ where: { id: id } });
-    }
+    },
   },
   Institution: {
     findAll: function () {
       return Institution.findAll({
-        include: ["Courses", "City"]
+        include: ["Courses", "City"],
       });
     },
     paginatedFindAll: function () {
       return Institution.findAll({
-        include: ["StudyAreas"]
+        include: ["StudyAreas"],
       });
     },
     findById: function (id) {
@@ -289,31 +288,31 @@ module.exports = {
     },
     delete: function (id) {
       return Institution.destroy({ where: { id: id } });
-    }
+    },
   },
   Course: {
     findAll: function () {
       return Course.findAll({
-        include: [{ all: true }]
+        include: [{ all: true }],
       });
     },
     findPaginated: function (offs, lim, name) {
       return name
         ? Course.findAll({
-          where: { name: { [Op.like]: `%${name}%` } },
-          offset: offs,
-          limit: lim,
-          include: [{ all: true }]
-        })
+            where: { name: { [Op.like]: `%${name}%` } },
+            offset: offs,
+            limit: lim,
+            include: [{ all: true }],
+          })
         : Course.findAll({
-          offset: offs,
-          limit: lim,
-          include: [{ all: true }]
-        });
+            offset: offs,
+            limit: lim,
+            include: [{ all: true }],
+          });
     },
     findByPopular: async function () {
       let course = await Course.findAll({
-        where: { isPopular: true }
+        where: { isPopular: true },
       });
       let courseLength = course.length;
       let randNum = Math.floor(Math.random() * courseLength) + 1;
@@ -325,26 +324,26 @@ module.exports = {
         where: { isPopular: true },
         limit: 20,
         offset: randNum,
-        include: { all: true }
+        include: { all: true },
       });
     },
 
     findNameByInstitutionId: function (id, name) {
       return Course.findOne({
         where: { institutionId: id, name: name },
-        include: [{ all: true }]
+        include: [{ all: true }],
       });
     },
     findByInstitutionId: function (id) {
       return Course.findAll({
         where: { institutionId: id },
-        include: [{ all: true }]
+        include: [{ all: true }],
       });
     },
     findByFacultyId: function (id, institutionId) {
       return Course.findAll({
         where: { studyAreaId: id, institutionId: institutionId },
-        include: [{ all: true }]
+        include: [{ all: true }],
       });
     },
     findByInstitutionIdSearch: function (
@@ -353,11 +352,10 @@ module.exports = {
       degreeTypeId,
       offSet
     ) {
-
       let dataObj = {
         institutionId: schoolId,
         studyAreaId: facultyId,
-        degreeTypeId: degreeTypeId
+        degreeTypeId: degreeTypeId,
       };
 
       let hasValues = true;
@@ -374,28 +372,28 @@ module.exports = {
 
       if (schoolId == 0 && facultyId == 0 && degreeTypeId == 0)
         hasValues = false;
-      console.log("------------------------------------------------------")
-      console.log(offSet)
-      console.log("------------------------------------------------------")
+      console.log("------------------------------------------------------");
+      console.log(offSet);
+      console.log("------------------------------------------------------");
       var oft = parseInt(offSet);
       return hasValues
         ? Course.findAll({
-          where: dataObj,
-          offset: oft,
-          limit: 10,
-          include: [{ all: true }]
-        })
+            where: dataObj,
+            offset: oft,
+            limit: 10,
+            include: [{ all: true }],
+          })
         : Course.findAll({
-          offset: oft,
-          limit: 10,
-          include: [{ all: true }]
-        });
+            offset: oft,
+            limit: 10,
+            include: [{ all: true }],
+          });
     },
 
     findCourseByFacultyAndSchool: function (facultyId, schoolId) {
       return Course.findAll({
         where: { institutionId: schoolId, studyAreaId: facultyId },
-        include: ["StudyArea", "DegreeType", "Institution"]
+        include: ["StudyArea", "DegreeType", "Institution"],
       });
     },
     findPopular: function (degreeTypeId, facultyId, institutionId) {
@@ -403,7 +401,7 @@ module.exports = {
         degreeTypeId: degreeTypeId,
         studyAreaId: facultyId,
         institutionId: institutionId,
-        isPopular: true
+        isPopular: true,
       };
 
       let isReturnAll = false;
@@ -416,19 +414,19 @@ module.exports = {
 
       return isReturnAll
         ? Course.findAll({
-          where: { isPopular: true },
-          include: [{ all: true }]
-        })
+            where: { isPopular: true },
+            include: [{ all: true }],
+          })
         : Course.findAll({
-          where: paramObj,
-          include: [{ all: true }]
-        });
+            where: paramObj,
+            include: [{ all: true }],
+          });
     },
     courseSearch: function (degreeTypeId, facultyId, institutionId) {
       let paramObj = {
         degreeTypeId: degreeTypeId,
         studyAreaId: facultyId,
-        institutionId: institutionId
+        institutionId: institutionId,
       };
       let isReturnAll = false;
       if (degreeTypeId == 0) delete paramObj.degreeTypeId;
@@ -439,19 +437,19 @@ module.exports = {
 
       return isReturnAll
         ? Course.findAll({
-          include: [{ all: true }]
-        })
+            include: [{ all: true }],
+          })
         : Course.findAll({
-          where: paramObj,
-          include: [{ all: true }]
-        });
+            where: paramObj,
+            include: [{ all: true }],
+          });
     },
     create: function (obj) {
       return Course.create(obj);
     },
     findById: function (id) {
       return Course.findByPk(id, {
-        include: [{ all: true }]
+        include: [{ all: true }],
       });
     },
     update: function (obj, id) {
@@ -459,18 +457,24 @@ module.exports = {
     },
     delete: function (id) {
       return Course.destroy({ where: { id: id } });
-    }
+    },
   },
   StudyArea: {
     findAll: function () {
       return StudyArea.findAll({
-        include: [{ all: true }]
+        include: [{ all: true }],
       });
     },
     findByInstitutionId: function (id) {
       return StudyArea.findAll({
         where: { institutionId: id },
-        include: [{ all: true }]
+        include: [{ all: true }],
+      });
+    },
+    findByInstitutionOId: function (id) {
+      return StudyArea.findAll({
+        where: { originalId: id },
+        include: [{ all: true }],
       });
     },
     create: function (obj) {
@@ -478,7 +482,7 @@ module.exports = {
     },
     findById: function (id) {
       return StudyArea.findByPk(id, {
-        include: [{ all: true }]
+        include: [{ all: true }],
       });
     },
     update: function (obj, id) {
@@ -486,12 +490,13 @@ module.exports = {
     },
     delete: function (id) {
       return StudyArea.destroy({ where: { id: id } });
-    }
+    },
   },
   Mail: {
     findAll: function () {
       return Mail.findAll({
-        include: [{ all: true }]
+        where: { hasDelete: false },
+        include: [{ all: true }],
       });
     },
 
@@ -503,40 +508,47 @@ module.exports = {
     },
     findById: function (id) {
       return Mail.findByPk(id, {
-        include: [{ all: true }]
+        where: { hasDelete: false },
+        include: [{ all: true }],
       });
     },
     findByUserId: function (user) {
       if (user.roleId) {
         return Mail.findAll({
-          where: { isPublic: false, [Op.not]: { senderId: user.id } },
+          where: {
+            hasDelete: false,
+            isPublic: false,
+            [Op.not]: { senderId: user.id },
+          },
           include: [{ all: true }],
-          order: [["createdAt", "DESC"]]
+          order: [["createdAt", "DESC"]],
         });
       } else {
         return Mail.findAll({
           where: {
-            [Op.or]: [{ userId: user.id }, { isPublic: true }]
+            hasDelete: false,
+            [Op.or]: [{ userId: user.id }, { isPublic: true }],
           },
           include: [{ all: true }],
-          order: [["createdAt", "DESC"]]
+          order: [["createdAt", "DESC"]],
         });
       }
     },
     findSentMessages: function (id) {
       return Mail.findAll({
-        where: { senderId: id },
-        include: [{ all: true }]
+        where: { hasDelete: false, senderId: id },
+        include: [{ all: true }],
       });
     },
     findAdminUnreadMessages: function (userId) {
       return Mail.findAll({
         where: {
+          hasDelete: false,
           hasReadAdmin: false,
           isPublic: false,
-          [Op.not]: { senderId: userId }
+          [Op.not]: { senderId: userId },
         },
-        include: [{ all: true }]
+        include: [{ all: true }],
       });
     },
     update: function (obj, id) {
@@ -544,7 +556,7 @@ module.exports = {
     },
     delete: function (id) {
       return Mail.destroy({ where: { id: id } });
-    }
+    },
   },
   Enquiry: {
     findAll: function () {
@@ -560,16 +572,18 @@ module.exports = {
 
     delete: function (id) {
       return Enquiry.destroy({ where: { id: id } });
-    }
+    },
   },
   User: {
-    findAll: function () {
-      return User.findAll();
+    findAll: () => {
+      return User.findAll({
+        order: [["id", "DESC"]],
+      });
     },
     findPaginated: function (username) {
       return User.findAll({
         where: { username: { [Op.like]: `%${username}%` } },
-        limit: 10
+        limit: 10,
       });
     },
     create: function (obj) {
@@ -581,18 +595,21 @@ module.exports = {
     findByEmail: function (email) {
       return User.findOne({
         where: { email: email },
-        include: [{ all: true }]
+        include: [{ all: true }],
       });
     },
     findByUsername: function (username) {
       return User.findOne({
         where: { username: username },
-        include: [{ all: true }]
+        include: [{ all: true }],
       });
     },
     resetPassword: function (token) {
       return User.findOne({
-        where: { resetPasswordToken: token,  resetPasswordExpires: { [Op.gt]: Date.now() }  }
+        where: {
+          resetPasswordToken: token,
+          resetPasswordExpires: { [Op.gt]: Date.now() },
+        },
       });
     },
     update: function (obj, id) {
@@ -600,11 +617,15 @@ module.exports = {
     },
     delete: function (id) {
       return User.destroy({ where: { id: id } });
-    }
+    },
   },
   Application: {
     findAll: function () {
-      return Application.findAll({ include: [{ all: true }] });
+      return Application.findAll({
+        where: { hasDeleted: false },
+        include: [{ all: true }],
+        order: [["id", "DESC"]],
+      });
     },
     create: function (obj) {
       return Application.create(obj);
@@ -621,16 +642,19 @@ module.exports = {
     findByUser: function (id) {
       return Application.findOne({
         where: { userId: id, hasDeleted: false },
-        include: [{ all: true }]
+        include: [{ all: true }],
+        limit: 20,
+        order: [["id", "DESC"]],
       });
     },
     findBySubmitted: function (id) {
       return Application.findAll({
-        where: { hasSubmitted: true },
-        include: [{ all: true }]
+        where: { hasSubmitted: true, hasDeleted: false },
+        include: [{ all: true }],
+        order: [["id", "DESC"]],
       });
-    }
-  }
+    },
+  },
 };
 module.exports.comparePassword = function (candidatePassword, hash, callback) {
   bcrypt.compare(candidatePassword, hash, function (err, isMatch) {

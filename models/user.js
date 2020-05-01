@@ -8,7 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     resetPasswordExpires: DataTypes.STRING,
     pushId: DataTypes.STRING,
     password: DataTypes.STRING,
-    email: DataTypes.STRING
+    email: DataTypes.STRING,
+    createdAt: DataTypes.DATE
   }, {});
   User.associate = function (models) {
     User.hasMany(models.Mail);

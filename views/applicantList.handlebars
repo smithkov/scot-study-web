@@ -15,17 +15,21 @@
                             <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
                                     <tr>
+                                         <th>id</th>
                                         <th>Full name</th>
                                         <th>Status</th>
                                         <th>Decision</th>
+                                        <th>Date</th>
                                         <th>Details</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     {{#each app}}
                                     <tr>
-                                        <td>{{this.firstname}} {{this.middlename}} {{this.lastname}}</td>
+                                        <td>{{this.serial}}</td>
+                                        <td>{{this.fullName}}</td>
                                         <td>
                                             {{#if this.hasSubmitted}}
                                             SUBMITTED
@@ -34,7 +38,9 @@
                                             {{/if}}
                                         </td>
                                         <td>{{this.decision}}</td>
-                                        <td><a href="/application/applicationByUser/{{this.User.id}}">View more</a></td>
+                                        <td>{{this.date}}</td>
+                                        <td><a href="/application/applicationByUser/{{this.userId}}">View more</a></td>
+                                        <td><a href="/application/hide/{{this.id}}"><img style="height: 30px; width:30px" src="/fancy_buttons/delete.ico"/></a></td>
                                     </tr>
                                     {{/each}}
                                 </tbody>

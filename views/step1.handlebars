@@ -25,96 +25,123 @@
 
           <form action="/application/form1" method="POST">
             <input type="hidden" name="id" value="{{app.id}}" />
-            <div class="form-group form-float">
-              <label>First name (as stated on the passport)*</label>
-              <div class="form-line">
-                <input type="text" name="firstname" value="{{app.firstname}}" placeholder="first name"
-                  class="form-control" required>
-              </div>
-            </div>
-
-            <div class="form-group form-float">
-              <label>Middle name</label>
-              <div class="form-line">
-                <input type="text" name="middlename" value="{{app.middlename}}" placeholder="middle name"
-                  class="form-control">
-              </div>
-            </div>
-
-            <div class="form-group form-float">
-              <label>Last name *</label>
-              <div class="form-line">
-                <input type="text" name="lastname" value="{{app.lastname}}" placeholder="last name" class="form-control"
-                  required>
-              </div>
-            </div>
-
-            <div class="form-group form-float">
-              <label>Nationality *</label>
-              <div class="form-line">
-                <select class='form-control show-tick' name="countryId" required>
-                  <option value='{{app.countryId}}'>
-                    {{#if app.countryId}}
-                    {{app.Country.name}}
-                    {{else}}
-                    --Select Nationality--
-                    {{/if}}
-                  </option>
-                  {{#each countries}}
-                  <option value='{{this.id}}'>{{this.name}}</option>
-                  {{/each}}
-                </select>
-              </div>
-            </div>
-
-            <div class="form-group form-float">
-              <label>Date of birth *</label>
-              <div class="input-group demo-masked-input">
-                <span class="input-group-addon">
-                  <i class="material-icons">date_range</i>
-                </span>
-                <div class="form-line">
-                  <input type="text" value="{{app.dob}}" name="dob" class="form-control date"
-                    placeholder="Ex: 30/07/2016">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group form-float">
+                  <label>First name (as stated on your passport)*</label>
+                  <div class="form-line">
+                    <input type="text" name="firstname" value="{{app.firstname}}" placeholder="First name"
+                      class="form-control" required>
+                  </div>
                 </div>
               </div>
-
             </div>
 
-            <div class="form-group form-float">
-              <label>Gender * </label>
-              <div class="form-line">
-                <select class='form-control show-tick' name="gender" required>
-                  <option value='{{app.gender}}'>
-                    {{#if app.gender}}
-                    {{app.gender}}
-                    {{else}}
-                    --Select Gender--
-                    {{/if}}
-
-                  </option>
-                  <option value='Male'>Male</option>
-                  <option value='Female'>Female</option>
-                </select>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group form-float">
+                  <label>Middle name</label>
+                  <div class="form-line">
+                    <input type="text" name="middlename" value="{{app.middlename}}" placeholder="Middle name"
+                      class="form-control">
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="form-group form-float">
-              <label>Marital status *</label>
-              <div class="form-line">
-                <select class='form-control show-tick' name="marital" required>
-                  <option value='{{app.marital}}'>
-                    {{#if app.marital}}
-                    {{app.marital}}
-                    {{else}}
-                    --Select Marital Status--
-                    {{/if}}
-                  </option>
-                  <option value='Married'>Married</option>
-                  <option value='Single'>Single</option>
-                </select>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group form-float">
+                  <label>Last name *</label>
+                  <div class="form-line">
+                    <input type="text" name="lastname" value="{{app.lastname}}" placeholder="Last name"
+                      class="form-control" required>
+                  </div>
+                </div>
               </div>
             </div>
+
+
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="form-group form-float">
+                  <label>Nationality *</label>
+                  <div class="form-line">
+                    <select class='form-control show-tick' name="countryId" required>
+                      <option value='{{app.countryId}}'>
+                        {{#if app.countryId}}
+                        {{app.Country.name}}
+                        {{else}}
+                        --Select Nationality--
+                        {{/if}}
+                      </option>
+                      {{#each countries}}
+                      <option value='{{this.id}}'>{{this.name}}</option>
+                      {{/each}}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="form-group form-float">
+                  <label>Date of birth *</label>
+                  <div class="input-group demo-masked-input">
+                    <span class="input-group-addon">
+                      <i class="material-icons">date_range</i>
+                    </span>
+                    <div class="form-line">
+                      <input value="{{app.dob}}" class="form-control" name="dob" type="date" id="example-date-input">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="form-group form-float">
+                  <label>Gender * </label>
+                  <div class="form-line">
+                    <select class='form-control show-tick' name="gender" required>
+                      <option value='{{app.gender}}'>
+                        {{#if app.gender}}
+                        {{app.gender}}
+                        {{else}}
+                        --Select Gender--
+                        {{/if}}
+
+                      </option>
+                      <option value='Male'>Male</option>
+                      <option value='Female'>Female</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="form-group form-float">
+                  <label>Marital status *</label>
+                  <div class="form-line">
+                    <select class='form-control show-tick' name="marital" required>
+                      <option value='{{app.marital}}'>
+                        {{#if app.marital}}
+                        {{app.marital}}
+                        {{else}}
+                        --Select Marital Status--
+                        {{/if}}
+                      </option>
+                      <option value='Married'>Married</option>
+                      <option value='Single'>Single</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <button type="submit" class="btn bg-primary waves-effect">
               <i class="material-icons">arrow_forward</i> <span class="icon-name">Save and continue</span>
             </button>

@@ -93,9 +93,9 @@
                                     {{#each submitted}}
                                     <tr>
                                         <td></td>
-                                        <td>{{this.firstname}} {{this.middlename}}{{this.lastname}} </td>
-                                        <td>{{this.City.name}}</td>
-                                        <td>{{this.createdAt}}</td>
+                                        <td><a href="/application/applicationByUser/{{this.userId}}">{{this.fullName}}</a></td> </td>
+                                        <td>{{this.nationality}}</td>
+                                        <td>{{this.date}}</td>
 
                                     </tr>
                                     {{/each}}

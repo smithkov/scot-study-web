@@ -576,6 +576,10 @@ router.get("/dashboard", ensureAuthenticated, async function (req, res) {
   let isAdmin = req.user.roleId;
   if (isAdmin) {
     let submittedApplication = await Query.Application.findBySubmitted();
+    const mappedApplication = submittedApplication.map(app=>{
+      const fullName = `${app.firstname} ${app.middlename} ${app.lastname}`
+      return {fullName: fullName, userId:app.User.id, nationality: app.Country.name, date: config.formatDate(app.createdAt)}
+    })
 
     //let allApplications = await Query.Application.findAll();
 
@@ -587,7 +591,7 @@ router.get("/dashboard", ensureAuthenticated, async function (req, res) {
       //instLim: institutions,
       unreadNum: unread.length,
       hasBadge: hasBadge,
-      submitted: submittedApplication
+      submitted: mappedApplication
     });
   } else {
     let app = await Query.Application.findByUser(req.user.id);
