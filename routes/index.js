@@ -13,7 +13,9 @@ var Application = require("../models").Application;
 var Query = require("../queries/query");
 var Logo = require("../models").Logo;
 var Banner = require("../models").Banner;
-var config = require("../my_modules/config");
+const config = require("../my_modules/config");
+const isAdmin = config.isAdmin;
+const ensureAuthenticated = config.ensureAuthenticated;
 const mail = require("../my_modules/mailer");
 var async = require("async");
 const bestSelling = "BEST SELLING COURSES";
@@ -646,13 +648,6 @@ router.get("/dashboard", ensureAuthenticated, async function (req, res) {
   // });
 });
 
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  } else {
-    //req.flash('error_msg','You are not logged in');
-    res.redirect("/user/login");
-  }
-}
+
 
 module.exports = router;

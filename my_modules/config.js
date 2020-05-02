@@ -8,7 +8,7 @@ var Institution = require("../models/institution");
 module.exports.login = "/login";
 module.exports.loginRedirect = "/user/login";
 var h2p = require("html2plaintext");
-module.exports.otherForms = function() {
+module.exports.otherForms = function () {
   return [
     { name: "name", display: "Name", type: "text", visible: true, value: "" },
     {
@@ -16,19 +16,34 @@ module.exports.otherForms = function() {
       display: "Hidden",
       type: "hidden",
       visible: false,
-      value: ""
-    }
+      value: "",
+    },
   ];
 };
-
-module.exports.institution = function() {
+module.exports.isAdmin = (req, res, next)=>{
+	if(req.user.roleId){
+		return next();
+	} else {
+		//req.flash('error_msg','You are not logged in');
+		res.redirect('/user/login');
+	}
+}
+module.exports.ensureAuthenticated =(req, res, next)=>{
+	if(req.isAuthenticated()){
+		return next();
+	} else {
+		//req.flash('error_msg','You are not logged in');
+		res.redirect('/user/login');
+	}
+}
+module.exports.institution = function () {
   return [
     {
       name: "name",
       display: "Name",
       type: "text",
       visible: true,
-      dropdown: false
+      dropdown: false,
     },
     {
       name: "about",
@@ -36,14 +51,14 @@ module.exports.institution = function() {
       type: "textarea",
       visible: true,
       dropdown: false,
-      textarea: true
+      textarea: true,
     },
     {
       name: "_id",
       display: "Hidden",
       type: "hidden",
       visible: false,
-      dropdown: false
+      dropdown: false,
     },
     {
       name: "country",
@@ -51,7 +66,7 @@ module.exports.institution = function() {
       display: "Country",
       type: "select",
       visible: true,
-      dropdown: true
+      dropdown: true,
     },
     {
       name: "type",
@@ -59,7 +74,7 @@ module.exports.institution = function() {
       display: "Institution Type",
       type: "select",
       visible: true,
-      dropdown: true
+      dropdown: true,
     },
     {
       name: "city",
@@ -67,8 +82,8 @@ module.exports.institution = function() {
       display: "City",
       type: "select",
       visible: true,
-      dropdown: true
-    }
+      dropdown: true,
+    },
   ];
 };
 
@@ -88,50 +103,66 @@ var photoStorage = multer.diskStorage({
       filetype = "jpg";
     }
     cb(null, "photo-" + Date.now() + "." + filetype);
-  }
+  },
 });
 
 // To get more info about 'multer'.. you can go through https://www.npmjs.com/package/multer..
 var storage = multer.diskStorage({
-  destination: function(req, file, cb) {
+  destination: function (req, file, cb) {
     cb(null, "public/uploads/");
   },
-  filename: function(req, file, cb) {
+  filename: function (req, file, cb) {
     cb(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
-  }
+  },
+});
+const storageForExcel = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/excel/");
+  },
+  filename: function (req, file, cb) {
+    const ext = file.originalname;
+
+    const stringArray = ext.split(".").pop();
+    
+    
+    cb(null, `excelBulkUpload.${stringArray}`);
+  },
 });
 var storage2 = multer.diskStorage({
-  destination: function(req, file, cb) {
+  destination: function (req, file, cb) {
     cb(null, "public/credentials/");
   },
-  filename: function(req, file, cb) {
+  filename: function (req, file, cb) {
     cb(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
-  }
+  },
 });
 
 var upload = multer({
-  storage: storage
+  storage: storage,
+});
+var uploadForExcel = multer({
+  storage: storageForExcel,
 });
 var photo = multer({
-  storage: photoStorage
+  storage: photoStorage,
 });
 var upload2 = multer({
-  storage: storage2
+  storage: storage2,
 });
 module.exports.cpUpload2 = upload2.fields([
-  { name: "credential", maxCount: 1 }
+  { name: "credential", maxCount: 1 },
 ]);
-module.exports.convertText = function(htmlText) {
+module.exports.convertText = function (htmlText) {
   let text = h2p(htmlText);
   return text;
 };
-module.exports.cacheData = function(key, val) {
+module.exports.cacheData = function (key, val) {
   cacheData.set(key, val, 5000);
 };
-module.exports.getCacheData2 = key => {
+module.exports.getCacheData2 = (key) => {
   return cacheData.get(key);
 };
-var getCacheData = (module.exports.getCacheData = function(key) {
+var getCacheData = (module.exports.getCacheData = function (key) {
   if (cacheData.get(key)) {
     console.log("this has been cached before" + key);
     return cacheData.get(key);
@@ -141,42 +172,51 @@ var getCacheData = (module.exports.getCacheData = function(key) {
   }
 });
 var storageAny = multer.diskStorage({
-  destination: function(req, file, cb) {
+  destination: function (req, file, cb) {
     cb(null, "public/uploads/");
   },
-  filename: function(req, file, cb) {
+  filename: function (req, file, cb) {
     cb(null, file.fieldname + "-" + Date.now());
-  }
+  },
 });
 var uploadAny = multer({
-  storage: storageAny
+  storage: storageAny,
 });
 
-module.exports.photoChooser = function(photo) {
+module.exports.photoChooser = function (photo) {
   console.log(photo);
   console.log("--------------------------------------");
   return photo === "" ? "no_photo.jpg" : photo;
 };
 module.exports.uploadAny = uploadAny;
+module.exports.uploadForExcel = uploadForExcel;
 module.exports.photo = photo;
 module.exports.cpUpload = upload.fields([{ name: "logo", maxCount: 1 }]);
 module.exports.cpUpload3 = upload.fields([
   { name: "logo", maxCount: 1 },
-  { name: "banner", maxCount: 8 }
+  { name: "banner", maxCount: 8 },
 ]);
 module.exports.cpUploadHome = upload.fields([
   { name: "topLogo", maxCount: 1 },
   { name: "bottomLogo", maxCount: 1 },
-  { name: "banner", maxCount: 8 }
+  { name: "banner", maxCount: 8 },
 ]);
 
-module.exports.formatDate= (date)=> {
+module.exports.formatDate = (date) => {
   let hours = date.getHours();
   let minutes = date.getMinutes();
-  let ampm = hours >= 12 ? 'pm' : 'am';
+  let ampm = hours >= 12 ? "pm" : "am";
   let = hours % 12;
   let = hours ? hours : 12; // the hour '0' should be '12'
-  let = minutes < 10 ? '0' + minutes : minutes;
-  let strTime = hours + ':' + minutes + ' ' + ampm;
-  return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " " + strTime;
-}
+  let = minutes < 10 ? "0" + minutes : minutes;
+  let strTime = hours + ":" + minutes + " " + ampm;
+  return (
+    date.getDate() +
+    "/" +
+    (date.getMonth() + 1) +
+    "/" +
+    date.getFullYear() +
+    " " +
+    strTime
+  );
+};

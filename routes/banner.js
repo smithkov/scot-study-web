@@ -3,6 +3,9 @@ var router = express.Router();
 var multer = require('multer');
 var Logo = require('../models/logo');
 const url = require('url');
+const config = require("../my_modules/config");
+const isAdmin = config.isAdmin;
+const ensureAuthenticated = config.ensureAuthenticated;
 
 
 
@@ -221,14 +224,5 @@ router.get('/cryptoAccountFinal', function(req, res, next) {
   var coins = req.session.coins;
   res.render('cryptoaccountfinal',{layout:'layoutDashboard.handlebars',user:req.user});
 });
-
-function ensureAuthenticated(req, res, next){
-	if(req.isAuthenticated()){
-		return next();
-	} else {
-		//req.flash('error_msg','You are not logged in');
-		res.redirect('/login');
-	}
-}
 
 module.exports = router;

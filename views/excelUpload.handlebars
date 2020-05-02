@@ -9,14 +9,31 @@
       <div class="card">
 
         <div class="body">
-          <form method="post" action="/course/saveExcel" enctype="multipart/form-data">
+          <div class="alert alert-warning">
+            <strong>Attention!</strong> Excel file must be in .xlsx format.
+          </div>
+          <form method="post" action="/course/saveExcelFile" enctype="multipart/form-data">
             <div class="form-group">
               <label>Upload an excel file</label>
-              <input id="upload" type="file" name="file" />
+              <input id="upload" required type="file" name="file" />
             </div>
-            <button type="button" id="btn-save" class="btn bg-default waves-effect">
-              Save to database
+            <div id="progress" style="display: none;" class="progress">
+              <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar"
+                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                <span class="sr-only"></span>
+              </div>
+            </div>
+            <button type="submit" class="btn bg-default waves-effect">
+              <i class="material-icons">publish</i> Upload
             </button>
+
+            <hr>
+            {{#if hasFile}}
+            <button type="button" id="btn-save" class="btn bg-orange waves-effect">
+              <i class="material-icons">save</i>
+              <span>SAVE</span>
+            </button>
+            {{/if}}
           </form>
         </div>
       </div>
@@ -26,16 +43,21 @@
 </section>
 <script>
   $(function () {
+    var progress = $("#progress");
     $("#btn-save").click(function () {
+      progress.show();
       $.ajax({
         type: 'POST',
         url: '/course/convert',
         dataType: "json",
         success: function (response) {
           console.log(response)
+          alert(response.message)
+          progress.hide();
         },
         error: function (jqXHR, exception) {
-
+          progress.hide();
+          alert(response.message)
         }
       });
     })

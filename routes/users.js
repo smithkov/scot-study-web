@@ -4,7 +4,9 @@ var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose").Schema;
-var config = require("../my_modules/config");
+const config = require("../my_modules/config");
+const isAdmin = config.isAdmin;
+const ensureAuthenticated = config.ensureAuthenticated;
 var bcrypt = require("bcryptjs");
 var Query = require("../queries/query");
 let jwt = require("jsonwebtoken");
@@ -361,14 +363,14 @@ function captchaVerificationRegister(req, res, next) {
   }
 }
 
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  } else {
-    //req.flash('error_msg','You are not logged in');
-    res.redirect(config.loginRedirect);
-  }
-}
+// function ensureAuthenticated(req, res, next) {
+//   if (req.isAuthenticated()) {
+//     return next();
+//   } else {
+//     //req.flash('error_msg','You are not logged in');
+//     res.redirect(config.loginRedirect);
+//   }
+// }
 
 //Users send message to admin only
 router.post("/sendAdminMessage", async (req, res) => {
@@ -628,7 +630,7 @@ router.post("/sendMessage", async (req, res) => {
   });
 });
 
-router.get("/all", ensureAuthenticated, async function (req, res, next) {
+router.get("/all", ensureAuthenticated, isAdmin, async function (req, res, next) {
   let id = 0;
   const findUsers = await Query.User.findAll();
   const getUsers = findUsers.map((user) => {

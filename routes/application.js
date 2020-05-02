@@ -7,6 +7,8 @@ const Institution = require("../queries/query").Institution;
 const City = require("../queries/query").City;
 const Country = require("../queries/query").Country;
 const config = require("../my_modules/config");
+const isAdmin = config.isAdmin;
+const ensureAuthenticated = config.ensureAuthenticated;
 const ObjectID = require("mongodb").ObjectID;
 const Query = require("../queries/query");
 const mail = require("../my_modules/mailer");
@@ -222,7 +224,7 @@ router.get("/finish", ensureAuthenticated, async function (req, res, next) {
   }
 });
 
-router.get("/applicants", ensureAuthenticated, async (req, res) => {
+router.get("/applicants", ensureAuthenticated, isAdmin, async (req, res) => {
   try {
     let applications = await Application.findAll();
     let id = 1;
@@ -423,7 +425,7 @@ router.post(
   }
 );
 
-router.post("/decision", ensureAuthenticated, function (req, res, next) {
+router.post("/decision", ensureAuthenticated,isAdmin, function (req, res, next) {
   let applicationId = req.body.id;
   //let userId = req.body.userId;
   var decision = req.body.decision;
@@ -1000,13 +1002,6 @@ router.post("/mobileForm5", async function (req, res) {
   });
 });
 
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  } else {
-    //req.flash('error_msg','You are not logged in');
-    res.redirect("/user/login");
-  }
-}
+
 
 module.exports = router;

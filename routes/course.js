@@ -2,10 +2,14 @@ var express = require("express");
 var router = express.Router();
 var multer = require("multer");
 const fs = require("fs");
+const config = require("../my_modules/config");
+const isAdmin = config.isAdmin;
+const ensureAuthenticated = config.ensureAuthenticated;
 
 var er = require("../config/error").error;
 var Query = require("../queries/query");
 const readXlsxFile = require("read-excel-file/node");
+const EXCEL_PATH = "public/excel/excelBulkUpload.xlsx";
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -13,21 +17,25 @@ var storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
-  }
+  },
 });
 var upload = multer({
-  storage: storage
+  storage: storage,
 });
-var config = require("../my_modules/config");
+
 const entityName = {
   name: "Course",
   entity: "course",
   course: true,
   url: "/course/",
-  form: config.institution
+  form: config.institution,
 };
 
-router.get("/add", ensureAuthenticated, async function (req, res, next) {
+router.get("/add", ensureAuthenticated, isAdmin, async function (
+  req,
+  res,
+  next
+) {
   //if(req.user.roleId){
   let institutions = await Query.Institution.findAll();
   let degreetype = await Query.DegreeType.findAll();
@@ -38,9 +46,8 @@ router.get("/add", ensureAuthenticated, async function (req, res, next) {
     entity: entityName,
     inst: institutions,
     degreeTypeData: degreetype,
-    studyAreaData: studyArea
+    studyAreaData: studyArea,
   });
-
 });
 
 function titleCase(str) {
@@ -54,88 +61,135 @@ function titleCase(str) {
 
   return final.join(" ");
 }
-router.get("/readExcelAndSave", function (req, res, next) {
+router.get("/readExcelAndSave", ensureAuthenticated, isAdmin, function (
+  req,
+  res,
+  next
+) {
   //console.log(res.file);
-  res.render("excelUpload", { layout: "layoutDashboard.handlebars" });
-});
+  const hasFile = fs.existsSync(EXCEL_PATH);
 
-router.post("/saveExcel", upload.single("file"), (req, res) => {
-  console.log(req.file);
-  res.redirect("readExcelAndSave");
-});
-
-router.post("/convert", async (req, res) => {
-  let rows = await readXlsxFile(
-    fs.createReadStream("public/uploads/Excel.xlsx")
-  );
-  let courseArray = [];
-  for (var i = 0; i < rows.length; i++) {
-    let school = rows[i][0];
-    let studyArea = rows[i][1];
-    let name = rows[i][2];
-    let city = rows[i][3];
-    let requirement = rows[i][4];
-    let fees = rows[i][5];
-    let duration = rows[i][6];
-    let intake = rows[i][7];
-    let degree = rows[i][8];
-    let popular = rows[i][9];
-    let scholarshipAmount = rows[i][10];
-
-    let getFacultyImage = await Query.FacultyImage.findByStudyArea(studyArea);
-    let randId = Math.floor(Math.random() * getFacultyImage.length) + 1;
-
-    let getCourseImage = getFacultyImage[randId - 1];
-
-    let checkNameExist = await Query.Course.findNameByInstitutionId(
-      school,
-      name
-    );
-    if (getCourseImage !== undefined) {
-      var newCourse = {
-        name: name,
-        requirement: requirement,
-        fee: fees,
-        path: getCourseImage.path,
-        duration: duration,
-        intake: intake,
-        isPopular: popular == "Popular" ? 1 : 0,
-        institutionId: school,
-        studyAreaId: studyArea,
-        degreeTypeId: degree,
-        scholarshipAmount: scholarshipAmount
-      };
-      if (checkNameExist) {
-        newCourse.id = checkNameExist.id;
-        let update = await Query.Course.update(newCourse, checkNameExist.id);
-      } else {
-        let add = await Query.Course.create(newCourse);
-      }
-    } else {
-      console.log(
-        "------------ERROORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR--------------"
-      );
-      console.log(`${i}    ${name} `);
-      console.log(
-        "------------ERROORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR--------------"
-      );
-    }
-  }
-  console.log(courseArray);
-  return res.send({
-    data: rows,
-    error: false
+  res.render("excelUpload", {
+    layout: "layoutDashboard.handlebars",
+    hasFile: hasFile,
   });
 });
 
-router.get("/listing", ensureAuthenticated, function (req, res, next) {
-  //  if(req.user.roleId){
-  Query.Course.findAll().then(course => {
+// router.post("/saveExcel", upload.single("file"), (req, res) => {
+//   console.log(req.file);
+//   res.redirect("readExcelAndSave");
+// });
+
+router.post(
+  "/saveExcelFile",
+  ensureAuthenticated,
+  config.uploadForExcel.single("file"),
+  function (req, res) {
+    //  console.log("id: "+ id);
+    res.redirect("readExcelAndSave");
+  }
+);
+router.post("/convert", ensureAuthenticated, isAdmin, async (req, res) => {
+  let errorMessage;
+  try {
+    const hasFile = fs.existsSync(EXCEL_PATH);
+    let rows;
+
+    if (hasFile) {
+      rows = await readXlsxFile(fs.createReadStream(EXCEL_PATH));
+      let courseArray = [];
+      for (let i = 0; i < rows.length; i++) {
+        if (i == 0) continue;
+        let school = rows[i][0];
+        let studyArea = rows[i][1];
+        let name = rows[i][2];
+        let city = rows[i][3];
+        let requirement = rows[i][4];
+        let fees = rows[i][5];
+        let duration = rows[i][6];
+        let intake = rows[i][7];
+        let degree = rows[i][8];
+        let popular = rows[i][9];
+        let scholarshipAmount = rows[i][10];
+
+        let getFacultyImage = await Query.FacultyImage.findByStudyArea(
+          studyArea
+        );
+        let randId = Math.floor(Math.random() * getFacultyImage.length) + 1;
+
+        let getCourseImage = getFacultyImage[randId - 1];
+
+        let checkNameExist = await Query.Course.findNameByInstitutionId(
+          school,
+          name
+        );
+        if (getCourseImage !== undefined) {
+          var newCourse = {
+            name: name,
+            requirement: requirement,
+            fee: fees,
+            path: getCourseImage.path,
+            duration: duration,
+            intake: intake,
+            isPopular: popular == "Popular" ? 1 : 0,
+            institutionId: school,
+            studyAreaId: studyArea,
+            degreeTypeId: degree,
+            scholarshipAmount: scholarshipAmount,
+          };
+          if (checkNameExist) {
+            newCourse.id = checkNameExist.id;
+            let update = await Query.Course.update(
+              newCourse,
+              checkNameExist.id
+            );
+          } else {
+            let add = await Query.Course.create(newCourse);
+          }
+        } else {
+          console.log(
+            "------------ERROORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR--------------"
+          );
+          console.log(`${i}    ${name} `);
+          console.log(
+            "------------ERROORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR--------------"
+          );
+        }
+      }
+      fs.unlinkSync(EXCEL_PATH);
+    } else {
+      errorMessage = "No file was found";
+    }
+
+    //console.log(courseArray);
+    return res.send({
+      data: rows,
+      message: errorMessage ? errorMessage : "Finished",
+      error: false,
+    });
+  } catch (err) {
+    console.log(
+      "----------------------------------------------------------------------------Errprprprprp"
+    );
+    console.log(err);
+    console.log(
+      "----------------------------------------------------------------------------Errprprprprp"
+    );
+    return res.send({
+      data: null,
+      message: "Something went wrong",
+      error: true,
+    });
+  }
+});
+
+router.get("/listing", ensureAuthenticated, isAdmin, function (req, res, next) {
+  Query.Course.findAll().then((course) => {
     res.render("list", {
       layout: "layoutDashboard.handlebars",
       user: req.user,
       data: course,
-      entity: entityName
+      entity: entityName,
     });
   });
 });
@@ -153,7 +207,11 @@ router.get("/listing", ensureAuthenticated, function (req, res, next) {
 //   //   res.redirect("/login");
 //   // }
 // });
-router.get("/update/:_id", ensureAuthenticated, async function (req, res, next) {
+router.get("/update/:_id", ensureAuthenticated, isAdmin, async function (
+  req,
+  res,
+  next
+) {
   let id = req.params._id;
   if (!id) throw er.err(er.noId);
   let studyArea = await Query.CacheFaculty.findAll();
@@ -168,17 +226,20 @@ router.get("/update/:_id", ensureAuthenticated, async function (req, res, next) 
     entity: entityName,
     inst: institutions,
     degreeTypeData: degreetype,
-    studyAreaData: studyArea
+    studyAreaData: studyArea,
   });
-
 });
 
-router.get("/delete/:_id", function (req, res, next) {
+router.get("/delete/:_id", ensureAuthenticated, isAdmin, function (
+  req,
+  res,
+  next
+) {
   let id = req.params._id;
 
   if (!id) throw er.err(er.noId);
 
-  Query.Course.delete(id).then(data => {
+  Query.Course.delete(id).then((data) => {
     res.redirect(entityName.url + "listing");
   });
 });
@@ -187,20 +248,24 @@ router.get("/popular/:_id", function (req, res, next) {
   let id = req.params._id;
   if (!id) throw er.err(er.noId);
 
-  Query.Course.findById(id).then(data => {
+  Query.Course.findById(id).then((data) => {
     data.isPopular = data.isPopular ? false : true;
-    Query.Course.update({ isPopular: data.isPopular }, id).then(data => {
+    Query.Course.update({ isPopular: data.isPopular }, id).then((data) => {
       res.redirect(entityName.url + "listing");
     });
   });
 });
 router.get("/courses", function (req, res) {
-  Query.Course.findAll().then(courses => {
+  Query.Course.findAll().then((courses) => {
     res.status(200).send({ data: courses });
   });
 });
 
-router.post("/update", async function (req, res, next) {
+router.post("/update", ensureAuthenticated, isAdmin, async function (
+  req,
+  res,
+  next
+) {
   var name = req.body.name;
   var id = req.body.id;
   //var requirement = req.body.requirement;
@@ -216,8 +281,9 @@ router.post("/update", async function (req, res, next) {
   var studyArea = req.body.studyArea;
   var degreeType = req.body.degreeType;
 
-  console.log("--------------------"+ studyArea+"-------------------------------")
-
+  console.log(
+    "--------------------" + studyArea + "-------------------------------"
+  );
 
   let getFacultyImage = await Query.FacultyImage.findByStudyArea(studyArea);
   let randId = Math.floor(Math.random() * getFacultyImage.length) + 1;
@@ -236,10 +302,10 @@ router.post("/update", async function (req, res, next) {
     institutionId: institution,
     studyAreaId: studyArea,
     path: getCourseImage.path + ".png",
-    degreeTypeId: degreeType
+    degreeTypeId: degreeType,
   };
   //  console.log("id: "+ id);
-  Query.Course.update(newCourse, id).then(course => {
+  Query.Course.update(newCourse, id).then((course) => {
     res.redirect(entityName.url + "listing");
   });
 });
@@ -260,12 +326,15 @@ router.post("/add", async function (req, res, next) {
   var studyArea = req.body.studyArea;
   var degreeType = req.body.degreeType;
 
-
   let getFacultyImage = await Query.FacultyImage.findByStudyArea(studyArea);
   let randId = Math.floor(Math.random() * getFacultyImage.length) + 1;
 
   let getCourseImage = getFacultyImage[randId - 1];
-  console.log("--------------------- " + isPopular + "------------------------------------------------")
+  console.log(
+    "--------------------- " +
+      isPopular +
+      "------------------------------------------------"
+  );
   if (getCourseImage !== undefined) {
     var newCourse = {
       intake: intake,
@@ -280,21 +349,12 @@ router.post("/add", async function (req, res, next) {
       institutionId: institution,
       studyAreaId: studyArea,
       path: getCourseImage.path + ".png",
-      degreeTypeId: degreeType
+      degreeTypeId: degreeType,
     };
-    Query.Course.create(newCourse).then(course => { });
+    Query.Course.create(newCourse).then((course) => {});
   }
   req.flash("success_msg", "You have successfully added a new course");
   res.redirect(entityName.url + "listing");
 });
-
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  } else {
-    //req.flash('error_msg','You are not logged in');
-    res.redirect("/user/login");
-  }
-}
 
 module.exports = router;

@@ -2,11 +2,14 @@ var express = require('express');
 var router = express.Router();
 var multer = require('multer');
 var Qualification = Query = require('../queries/query').Qualification;
+const config = require("../my_modules/config");
+const isAdmin = config.isAdmin;
+const ensureAuthenticated = config.ensureAuthenticated;
 
 const url = require('url');
 const entityName = "qualification"
 
-router.get('/add', ensureAuthenticated,function(req, res, next) {
+router.get('/add', ensureAuthenticated,isAdmin, function(req, res, next) {
     if(req.user.roleId){
         res.render('add',{layout: 'layoutDashboard.handlebars',user: req.user,entity:entityName});
     }
@@ -15,7 +18,7 @@ router.get('/add', ensureAuthenticated,function(req, res, next) {
     }
 });
 
-router.get('/listing',ensureAuthenticated, function(req, res, next) {
+router.get('/listing', function(req, res, next) {
   if(req.user.roleId){
     Qualification.findAll().then(data=>{
        res.render('list',{layout: 'layoutDashboard.handlebars',data:data,user:req.user,entity:entityName});
@@ -26,7 +29,7 @@ router.get('/listing',ensureAuthenticated, function(req, res, next) {
   }
 });
 
-router.get('/update/:_id',ensureAuthenticated, function(req, res, next) {
+router.get('/update/:_id', function(req, res, next) {
   Qualification.findById(req.params._id).then(data=>{
       res.render('update',{layout: 'layoutDashboard.handlebars',data:data,user:req.user,entity:entityName});
     });
@@ -39,7 +42,7 @@ router.get('/delete/:_id',ensureAuthenticated, function(req, res, next) {
     });
 });
 
-router.post('/update',ensureAuthenticated,function(req,res){
+router.post('/update',ensureAuthenticated,isAdmin,function(req,res){
 
   var name = req.body.name;
   var id = req.body.id;
@@ -52,7 +55,7 @@ router.post('/update',ensureAuthenticated,function(req,res){
   })
 });
 
-router.post('/add', function(req, res, next) {
+router.post('/add',ensureAuthenticated, isAdmin, function(req, res, next) {
   if(req.user.roleId){
     var name = req.body.name;
     //req.checkBody('name', 'Name is required').notEmpty();
@@ -72,14 +75,5 @@ router.post('/add', function(req, res, next) {
 
 
 });
-
-function ensureAuthenticated(req, res, next){
-	if(req.isAuthenticated()){
-		return next();
-	} else {
-		//req.flash('error_msg','You are not logged in');
-		res.redirect('/login');
-	}
-}
 
 module.exports = router;

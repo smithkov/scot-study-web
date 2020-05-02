@@ -3,13 +3,15 @@ var router = express.Router();
 var multer = require('multer');
 var City = require('../models/city');
 var config = require('../my_modules/config');
+const isAdmin = config.isAdmin;
+const ensureAuthenticated = config.ensureAuthenticated;
 var Query = require('../queries/query')
 
 const entityName = {name:"City", entity:"city",basic:true, url:"/city/",form:config.otherForms};
 
 
 
-router.get('/add',ensureAuthenticated,function(req, res, next) {
+router.get('/add',ensureAuthenticated,isAdmin,function(req, res, next) {
     // if(req.user.roleId){
     //     res.render('add',{layout: 'layoutDashboard.handlebars',user: req.user,entity:entityName});
     // }
@@ -76,13 +78,6 @@ router.post('/add', function(req, res, next) {
 
 });
 
-function ensureAuthenticated(req, res, next){
-	if(req.isAuthenticated()){
-		return next();
-	} else {
-		//req.flash('error_msg','You are not logged in');
-		res.redirect('/user/login');
-	}
-}
+
 
 module.exports = router;

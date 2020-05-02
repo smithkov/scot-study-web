@@ -5,7 +5,9 @@ var StudyArea = require("../queries/query").StudyArea;
 var Institution = require("../queries/query").Institution;
 var er = require("../config/error").error;
 //var Query = require('../queries/query')
-var config = require("../my_modules/config");
+const config = require("../my_modules/config");
+const isAdmin = config.isAdmin;
+const ensureAuthenticated = config.ensureAuthenticated;
 
 const entityName = {
   name: "Study Area/Faculty",
@@ -22,7 +24,7 @@ router.post("/studyAreaBySchool", function (req, res) {
   });
 });
 
-router.get("/add", ensureAuthenticated, function (req, res, next) {
+router.get("/add", ensureAuthenticated, isAdmin, function (req, res, next) {
   // Institution.getAll(function(err,institution){
   //     if(err){
   //       throw err;
@@ -118,13 +120,5 @@ router.post("/add", function (req, res, next) {
   });
 });
 
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  } else {
-    //req.flash('error_msg','You are not logged in');
-    res.redirect("/user/login");
-  }
-}
 
 module.exports = router;

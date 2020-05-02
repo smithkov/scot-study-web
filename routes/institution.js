@@ -7,7 +7,9 @@ var Country = require('../models/country');
 var City = require('../models/city');
 Query = require('../queries/query');
 var InstitutionType = require('../models/institutionType');
-var config = require('../my_modules/config');
+const config = require("../my_modules/config");
+const isAdmin = config.isAdmin;
+const ensureAuthenticated = config.ensureAuthenticated;
 const entityName = {name:"Institution", entity:"institution",institution:true, url:"/institution/",form:config.institution};
 
 
@@ -25,7 +27,7 @@ const entityName = {name:"Institution", entity:"institution",institution:true, u
 //    storage: storage
 // });
  //var cpUpload = upload.fields([{ name: 'logo', maxCount: 1 }, { name: 'banner', maxCount: 8 }])
-router.get('/add',ensureAuthenticated, function(req, res, next) {
+router.get('/add',ensureAuthenticated, isAdmin, function(req, res, next) {
     //if(req.user.roleId){
     Query.City.findAll().then(city=>{
        res.render('add',{layout: 'layoutDashboard.handlebars',user:req.user,entity:entityName, city:city});
@@ -44,7 +46,7 @@ router.get('/listing',ensureAuthenticated,function(req, res, next) {
   // }
 });
 
-router.get('/update/:_id',ensureAuthenticated,function(req, res, next) {
+router.get('/update/:_id',ensureAuthenticated,isAdmin,function(req, res, next) {
   let id = req.params._id;
   Query.Institution.findById(id).then(institution=>{
     Query.City.findAll().then(city=>{
@@ -53,7 +55,7 @@ router.get('/update/:_id',ensureAuthenticated,function(req, res, next) {
   })
 });
 
-router.get('/delete/:_id',function(req, res, next) {
+router.get('/delete/:_id',ensureAuthenticated, isAdmin, function(req, res, next) {
   let id = req.params._id;
   Query.Institution.delete(id).then(data=>{
     res.redirect(entityName.url+"listing");
@@ -65,7 +67,7 @@ router.get('/institutions', function(req, res) {
        res.status(200).send({data: data});
     });
 });
-router.post('/update',config.cpUpload3,function(req,res){
+router.post('/update',config.cpUpload3,ensureAuthenticated, function(req,res){
 
   var name = req.body.name;
   var id = req.body.id;
@@ -93,7 +95,7 @@ router.post('/update',config.cpUpload3,function(req,res){
   })
 });
 
-router.post('/add', config.cpUpload3,function(req, res, next) {
+router.post('/add', config.cpUpload3,ensureAuthenticated, isAdmin, function(req, res, next) {
   //if(req.user.roleId){
 
     var name = req.body.name;
@@ -117,14 +119,5 @@ router.post('/add', config.cpUpload3,function(req, res, next) {
       res.redirect(entityName.url+"listing");
     });
 });
-
-function ensureAuthenticated(req, res, next){
-	if(req.isAuthenticated()){
-		return next();
-	} else {
-		//req.flash('error_msg','You are not logged in');
-		res.redirect('/user/login');
-	}
-}
 
 module.exports = router;

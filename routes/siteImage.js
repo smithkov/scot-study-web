@@ -3,7 +3,9 @@ var router = express.Router();
 var multer = require('multer');
 var Logo =  require('../queries/query').Logo;
 var Banner =  require('../queries/query').Banner;
-var config = require('../my_modules/config');
+const config = require("../my_modules/config");
+const isAdmin = config.isAdmin;
+const ensureAuthenticated = config.ensureAuthenticated;
 
 const url = require('url');
 const listUrl = "/siteImage/listing";
@@ -26,11 +28,11 @@ var upload = multer({
 
 
 
-router.get('/add',ensureAuthenticated,function(req, res, next) {
+router.get('/add',ensureAuthenticated,isAdmin, function(req, res, next) {
 
   res.render('siteImage',{layout: 'layoutDashboard.handlebars',user:req.user});
 });
-router.post('/add',config.cpUploadHome,function(req, res, next) {
+router.post('/add',config.cpUploadHome,ensureAuthenticated, isAdmin, function(req, res, next) {
 
   var topLogo =req.files['topLogo']== undefined?undefined: req.files['topLogo'][0].filename;
   var bottomLogo = req.files['bottomLogo']== undefined?undefined: req.files['bottomLogo'][0].filename;
@@ -111,7 +113,7 @@ router.get('/deleteLogo/:_id',function(req, res, next) {
 });
 
 
-router.get('/deleteBanner/:_id',function(req, res, next) {
+router.get('/deleteBanner/:_id',ensureAuthenticated, isAdmin, function(req, res, next) {
   Banner.findAll().then(banners=>{
     if(banners.length > 1){
       let id = req.params._id;
@@ -163,13 +165,6 @@ router.get('/toggleLogo/:_id',function(req, res, next) {
  })
 });
 
-function ensureAuthenticated(req, res, next){
-	if(req.isAuthenticated()){
-		return next();
-	} else {
-		//req.flash('error_msg','You are not logged in');
-		res.redirect('/user/login');
-	}
-}
+
 
 module.exports = router;
