@@ -22,6 +22,7 @@
                                         <th></th>
                                         <th>Username</th>
                                         <th>Email</th>
+                                        <th>Phone</th>
                                         <th>Date of reg.</th>
 
                                     </tr>
@@ -30,17 +31,11 @@
                                 <tbody>
                                     {{#each users}}
                                     <tr>
-                                        {{!-- <td>
-                                             {{#if this.path}}
-                                                <img style="height:30px; width:30px" class="img-responsive thumbnail" src="/uploads/{{this.path}}">
-                                               {{else}}
-
-                                                 <img style="height:30px; width:30px" class="img-responsive thumbnail" src="/cancel.png">
-                                             {{/if}}
-                                           </td> --}}
-                                            <td>{{this.id}}</td>
+                                       
+                                        <td>{{this.id}}</td>
                                         <td>{{this.username}}</td>
                                         <td>{{this.email}}</td>
+                                        <td>{{this.phone}}</td>
                                          <td>{{this.date}}</td>
 
 

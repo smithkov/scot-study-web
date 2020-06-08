@@ -3342,7 +3342,12 @@ footer .powered p{
 	.slide-detail .matter {
 		background: #000;
 		margin: 30px 0;
-    }
+	}
+	.img-resize{
+		object-fit: cover;
+		object-position: center center;
+	  }
+	  
 	.slide-detail .matter2 {
 		margin: 0 0 30px;
 		border: 1px solid #e5e5e5;

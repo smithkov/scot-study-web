@@ -14,6 +14,7 @@ let defaultImage = "no_photo.jpg";
 require("dotenv").config();
 let middleware = require("../middleware");
 const mail = require("../my_modules/mailer");
+const Country = require("../queries/query").Country;
 
 var Recaptcha = require("express-recaptcha").Recaptcha;
 var recaptcha = new Recaptcha(
@@ -43,8 +44,9 @@ var myClient = new OneSignal.Client({
 });
 
 // Register
-router.get("/register", function (req, res) {
-  res.render("register");
+router.get("/register", async function (req, res) {
+  let country = await Country.findAll();
+  res.render("register",{country:country});
 });
 
 router.get("/photo", ensureAuthenticated, function (req, res) {
@@ -284,11 +286,12 @@ router.post("/register", async function (req, res) {
   var email = req.body.email;
   var username = req.body.username;
   var password = req.body.password;
-  var password2 = req.body.confirmPassword;
+  var phone = req.body.phone;
 
   var newUser = {
     email: email,
     username: username,
+    phone:phone,
     password: password,
     roleId: false,
   };
@@ -638,6 +641,7 @@ router.get("/all", ensureAuthenticated, isAdmin, async function (req, res, next)
     return {
       id: id,
       username: user.username,
+      phone: user.phone,
       date: config.formatDate(user.createdAt),
       email: user.email,
     };

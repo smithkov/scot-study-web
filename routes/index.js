@@ -1,6 +1,6 @@
 var express = require("express");
 var Model = require("../config/database");
-const { QueryTypes } = require('sequelize');
+const { QueryTypes } = require("sequelize");
 var crypto = require("crypto");
 var router = express.Router();
 var User = require("../models").User;
@@ -19,6 +19,7 @@ const ensureAuthenticated = config.ensureAuthenticated;
 const mail = require("../my_modules/mailer");
 var async = require("async");
 const bestSelling = "BEST SELLING COURSES";
+
 router.get("/", async function (req, res) {
   //let courses = await Query.Course.findAll();
 
@@ -38,7 +39,7 @@ router.get("/", async function (req, res) {
     //faculties: studyAreas.length,
     city: cities.length,
     best: bestSelling,
-    data: populars
+    data: populars,
   });
 });
 
@@ -61,21 +62,17 @@ router.post("/courseListingMobile", async function (req, res, next) {
 router.get("/data", function (req, res) {
   try {
     Query.Institution.paginatedFindAll().then(
-      schools => {
+      (schools) => {
         return res.send({
           auth: false,
           token: null,
           error: false,
-          data: schools
+          data: schools,
         });
       },
-      error => {
-
-      }
+      (error) => {}
     );
-  } catch (err) {
-
-  }
+  } catch (err) {}
 });
 router.post("/getCoursesByFaculty", async (req, res) => {
   let schoolId = req.body.schoolId;
@@ -86,7 +83,7 @@ router.post("/getCoursesByFaculty", async (req, res) => {
   );
   return res.send({
     success: true,
-    data: coursesByFaculty
+    data: coursesByFaculty,
   });
 });
 
@@ -122,7 +119,7 @@ router.get("/schoolsMobile", async (req, res) => {
       schools[i].id
     );
     if (getSurrogateFaculty.length > 0) {
-      getSurrogateFaculty.forEach(school => {
+      getSurrogateFaculty.forEach((school) => {
         fac.push(school);
       });
       schoolArray.push({ uni: schools[i], faculty: fac });
@@ -135,7 +132,7 @@ router.get("/schoolsMobile", async (req, res) => {
     auth: false,
     token: null,
     error: false,
-    data: schoolArray
+    data: schoolArray,
   });
 });
 
@@ -152,8 +149,8 @@ router.get("/institutions", async function (req, res) {
   let schools = await Query.Institution.findAll();
   res.render("institutions", {
     data: reduceArray(populars),
-    schools:schools,
-    best: bestSelling
+    schools: schools,
+    best: bestSelling,
   });
 });
 
@@ -164,10 +161,9 @@ router.get("/compare-fees", async function (req, res) {
   // let institution = await Query.Institution.findAll();
   // let faculty = await Query.StudyArea.findAll();
   res.render("compare", {
-
     best: bestSelling,
 
-    data: reduceArray(populars)
+    data: reduceArray(populars),
   });
 });
 
@@ -185,14 +181,14 @@ router.get("/courses", async function (req, res) {
   res.render("course", {
     courses: courses,
     best: bestSelling,
-    data: reduceArray(populars)
+    data: reduceArray(populars),
   });
 });
 
 router.get("/getCourses", async function (req, res) {
   let courses = await Query.Course.findAll();
   return res.send({
-    data: courses
+    data: courses,
   });
 });
 
@@ -200,57 +196,60 @@ router.get("/forgot", async function (req, res) {
   res.render("forgot");
 });
 
-
 router.post("/forgot", async function (req, res, next) {
   let email = req.body.email;
 
-
-
   crypto.randomBytes(20, async function (err, buf) {
-    var token = buf.toString('hex');
+    var token = buf.toString("hex");
     let user = await Query.User.findByEmail(email);
     if (!user) {
-      req.flash('error_msg', 'No account with that email address exists.');
-      return res.redirect('/forgot');
+      req.flash("error_msg", "No account with that email address exists.");
+      return res.redirect("/forgot");
     }
 
     let id = user.id;
     var newUser = {
       id: user.id,
       resetPasswordToken: token,
-      resetPasswordExpires: Date.now() + 3600000
+      resetPasswordExpires: Date.now() + 3600000,
     };
     let update = await Query.User.update(newUser, id);
 
-    let message = 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-      'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-      'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-      '<br/> If you did not request this, please ignore this email and your password will remain unchanged.\n'
+    let message =
+      "You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n" +
+      "Please click on the following link, or paste this into your browser to complete the process:\n\n" +
+      "http://" +
+      req.headers.host +
+      "/reset/" +
+      token +
+      "\n\n" +
+      "<br/> If you did not request this, please ignore this email and your password will remain unchanged.\n";
 
     if (!mail.send(user.email, "Reset Password (Scot-Study)", message)) {
-      req.flash('success_msg', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
-
+      req.flash(
+        "success_msg",
+        "An e-mail has been sent to " +
+          user.email +
+          " with further instructions."
+      );
     } else {
-      req.flash('error_msg', 'We could not process your request');
+      req.flash("error_msg", "We could not process your request");
     }
-    res.redirect('/forgot');
+    res.redirect("/forgot");
   });
-
 });
 
-router.get('/reset/:token', async function (req, res) {
+router.get("/reset/:token", async function (req, res) {
   let token = req.params.token;
   let getUser = await Query.User.resetPassword(token);
 
   if (!getUser) {
-    req.flash('error_msg', 'Password reset token is invalid or has expired.');
-    return res.redirect('/forgot');
-  } else
-
-    res.render('reset', { token: token });
+    req.flash("error_msg", "Password reset token is invalid or has expired.");
+    return res.redirect("/forgot");
+  } else res.render("reset", { token: token });
 });
 
-router.post('/reset/:token', async function (req, res) {
+router.post("/reset/:token", async function (req, res) {
   let token = req.params.token;
   let newPassword = req.body.newPass;
   var getUser = await Query.User.resetPassword(token);
@@ -259,12 +258,12 @@ router.post('/reset/:token', async function (req, res) {
     resetPasswordToken: null,
     resetPasswordExpires: null,
     password: getUser.password,
-    id: id
-  }
+    id: id,
+  };
 
   if (!getUser) {
-    req.flash('error', 'Password reset token is invalid or has expired.');
-    return res.redirect('/forgot');
+    req.flash("error", "Password reset token is invalid or has expired.");
+    return res.redirect("/forgot");
   }
   if (newPassword === req.body.confirmPass) {
     bcrypt.genSalt(4, async function (err, salt) {
@@ -272,27 +271,31 @@ router.post('/reset/:token', async function (req, res) {
         newUser.password = hash;
         // create that user as no one by that username exists
         let update = await Query.User.update(newUser, id);
-         
+
         if (update) {
-          
-          let message = 'Hello,\n\n' + 'This is a confirmation that the password for your account ' + getUser.email + ' has just been changed.\n'
-          mail.send(getUser.email, "Password Changed (Scot-Study)", message)
-          req.flash('success_msg', 'Success! Your password has been changed.');
-          res.redirect('/user/login');
+          let message =
+            "Hello,\n\n" +
+            "This is a confirmation that the password for your account " +
+            getUser.email +
+            " has just been changed.\n";
+          mail.send(getUser.email, "Password Changed (Scot-Study)", message);
+          req.flash("success_msg", "Success! Your password has been changed.");
+          res.redirect("/user/login");
         } else {
-          req.flash('error_msg', 'Oops! Something went wrong. Kindly contact us.');
-          res.redirect('back');
+          req.flash(
+            "error_msg",
+            "Oops! Something went wrong. Kindly contact us."
+          );
+          res.redirect("back");
         }
       });
     });
   } else {
-    req.flash('error_msg', 'Passwords do not match.');
-    return res.redirect('back');
+    req.flash("error_msg", "Passwords do not match.");
+    return res.redirect("back");
   }
-
 });
 router.get("/dropDown", async function (req, res) {
-
   //const faculty = await Model.query("SELECT  DISTINCT name, originalId FROM StudyAreas", { type: QueryTypes.SELECT });
   let degreeTypes = await Query.DegreeType.findAll();
   const faculty = await Query.CacheFaculty.findAll();
@@ -302,8 +305,8 @@ router.get("/dropDown", async function (req, res) {
     data: {
       faculty: faculty,
       degree: degreeTypes,
-      institutions: institutions
-    }
+      institutions: institutions,
+    },
   });
 });
 
@@ -311,12 +314,30 @@ router.post("/courseSearch", async function (req, res) {
   let degreeId = req.body.degreeId;
   let facultyId = req.body.facultyId;
   let institutionId = req.body.institutionId;
+  let offSet = req.body.offSet;
+  let searchByName = req.body.searchName;
 
-  let course = await Query.Course.courseSearch(
-    degreeId,
-    facultyId,
-    institutionId
-  );
+  let course;
+  let count;
+
+  if (searchByName) {
+    course = await Query.Course.findPaginated(offSet, 10, searchByName);
+    //count = await Query.Course.findAllAndCountForSearchByName(offSet, 10, searchByName);
+  } else {
+    course = await Query.Course.courseSearch(
+      degreeId,
+      facultyId,
+      institutionId,
+      offSet
+    );
+
+    // count = await Query.Course.findAllAndCount(
+    //   degreeId,
+    //   facultyId,
+    //   institutionId
+    // );
+  }
+   
   return res.send({
     data: course
   });
@@ -332,7 +353,7 @@ router.post("/popular", async function (req, res) {
     institutionId
   );
   return res.send({
-    data: popular
+    data: popular,
   });
 });
 
@@ -347,7 +368,6 @@ router.post("/compareFee", async function (req, res) {
   let offSet1 = req.body.offSetOne;
   let offSet2 = req.body.offSetTwo;
 
-
   let courseForInstitution1 = await Query.Course.findByInstitutionIdSearch(
     institutionId,
     facultyId,
@@ -361,7 +381,7 @@ router.post("/compareFee", async function (req, res) {
     offSet2
   );
   return res.send({
-    data: { course1: courseForInstitution1, course2: courseForInstitution2 }
+    data: { course1: courseForInstitution1, course2: courseForInstitution2 },
   });
 });
 
@@ -379,7 +399,7 @@ router.post("/compareFeeSingle", async function (req, res) {
   );
 
   return res.send({
-    data: courseForInstitution
+    data: courseForInstitution,
   });
 });
 
@@ -408,7 +428,7 @@ router.get("/pre-departure", async function (req, res) {
     app: departure[0],
     description: desc,
     best: bestSelling,
-    data: reduceArray(populars)
+    data: reduceArray(populars),
   });
 });
 
@@ -417,7 +437,7 @@ router.get("/visa-application-guideline", function (req, res) {
   Query.Guideline.findAll().then(function (guide) {
     res.render("richTextTemp", {
       app: guide[0],
-      description: desc
+      description: desc,
     });
   });
 });
@@ -438,7 +458,7 @@ router.get("/scholarship", (req, res) => {
   Query.Course.findByPopular().then(function (populars) {
     res.render("scholarship", {
       data: reduceArray(populars),
-      best: bestSelling
+      best: bestSelling,
     });
   });
 });
@@ -447,7 +467,7 @@ router.get("/about-scotland", (req, res) => {
   Query.Course.findByPopular().then(function (populars) {
     res.render("aboutScotland", {
       data: reduceArray(populars),
-      best: bestSelling
+      best: bestSelling,
     });
   });
 });
@@ -455,14 +475,14 @@ router.get("/about-scotland", (req, res) => {
 router.get("/checklist", ensureAuthenticated, (req, res) => {
   res.render("checklist", {
     layout: "layoutDashboard.handlebars",
-    user: req.user
+    user: req.user,
   });
 });
 
 router.get("/help", ensureAuthenticated, (req, res) => {
   res.render("help", {
     layout: "layoutDashboard.handlebars",
-    user: req.user
+    user: req.user,
   });
 });
 
@@ -473,7 +493,7 @@ router.get("/detail/:school/:course/:id", async (req, res) => {
   res.render("course_detail", {
     data: reduceArray(populars),
     best: bestSelling,
-    course: course
+    course: course,
   });
 });
 
@@ -488,7 +508,7 @@ router.get("/school-courses/:name/:_id", async function (req, res, next) {
     courses: courseByInstitution,
     name: Schoolname,
     data: reduceArray(populars),
-    best: bestSelling
+    best: bestSelling,
   });
 });
 
@@ -501,7 +521,7 @@ router.get("/school-faculties/:name/:_id", async function (req, res, next) {
     let InstitutionById = await Query.Institution.findById(id);
     var faculty = [];
     var facultyCourse = [];
-    courseByInstitution.forEach(course => {
+    courseByInstitution.forEach((course) => {
       faculty.push(course.StudyArea.id);
     });
 
@@ -513,7 +533,7 @@ router.get("/school-faculties/:name/:_id", async function (req, res, next) {
       );
       facultyCourse.push({
         faculty: courses[0],
-        course: courses
+        course: courses,
       });
     }
 
@@ -522,7 +542,7 @@ router.get("/school-faculties/:name/:_id", async function (req, res, next) {
       name: facultyName,
       data: reduceArray(populars),
       best: bestSelling,
-      school: InstitutionById
+      school: InstitutionById,
     });
   });
 });
@@ -533,7 +553,7 @@ router.post("/faculty-courses", async (req, res) => {
   let InstitutionById = await Query.Institution.findById(schoolId);
   var faculty = [];
   var facultyCourse = [];
-  courseByInstitution.forEach(course => {
+  courseByInstitution.forEach((course) => {
     faculty.push(course.StudyArea.id);
   });
   let filterIds = uniq(faculty);
@@ -545,7 +565,7 @@ router.post("/faculty-courses", async (req, res) => {
     );
     facultyCourse.push({
       faculty: courses[0].StudyArea.name,
-      course: courses
+      course: courses,
     });
   }
 
@@ -553,7 +573,7 @@ router.post("/faculty-courses", async (req, res) => {
     auth: false,
     token: null,
     error: false,
-    data: facultyCourse
+    data: facultyCourse,
   });
 });
 
@@ -568,7 +588,7 @@ router.get("/faculty/:_id/:schoolId", async (req, res) => {
     data: reduceArray(populars),
     best: bestSelling,
     school: courseByFaculty[0].Institution,
-    courses: courseByFaculty
+    courses: courseByFaculty,
   });
 });
 
@@ -578,10 +598,15 @@ router.get("/dashboard", ensureAuthenticated, async function (req, res) {
   let isAdmin = req.user.roleId;
   if (isAdmin) {
     let submittedApplication = await Query.Application.findBySubmitted();
-    const mappedApplication = submittedApplication.map(app=>{
-      const fullName = `${app.firstname} ${app.middlename} ${app.lastname}`
-      return {fullName: fullName, userId:app.User.id, nationality: app.Country.name, date: config.formatDate(app.createdAt)}
-    })
+    const mappedApplication = submittedApplication.map((app) => {
+      const fullName = `${app.firstname} ${app.middlename} ${app.lastname}`;
+      return {
+        fullName: fullName,
+        userId: app.User.id,
+        nationality: app.Country.name,
+        date: config.formatDate(app.createdAt),
+      };
+    });
 
     //let allApplications = await Query.Application.findAll();
 
@@ -593,7 +618,7 @@ router.get("/dashboard", ensureAuthenticated, async function (req, res) {
       //instLim: institutions,
       unreadNum: unread.length,
       hasBadge: hasBadge,
-      submitted: mappedApplication
+      submitted: mappedApplication,
     });
   } else {
     let app = await Query.Application.findByUser(req.user.id);
@@ -642,12 +667,10 @@ router.get("/dashboard", ensureAuthenticated, async function (req, res) {
       user: req.user,
       showProgress: isShowProgress,
       appPercentage: parseInt(applicationPercentage),
-      app: app
+      app: app,
     });
   }
   // });
 });
-
-
 
 module.exports = router;

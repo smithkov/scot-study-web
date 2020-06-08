@@ -1,4 +1,33 @@
-<title>Scotiaworld | Find-Course</title>
+<title>List of Courses In Scottish Universities | Find-Course</title>
+<style>
+	#customers {
+		font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+		border-collapse: collapse;
+		width: 100%;
+	}
+
+	#customers td,
+	#customers th {
+		border: 1px solid #ddd;
+		padding: 8px;
+	}
+
+	#customers tr:nth-child(even) {
+		background-color: #f2f2f2;
+	}
+
+	#customers tr:hover {
+		background-color: #ddd;
+	}
+
+	#customers th {
+		padding-top: 12px;
+		padding-bottom: 12px;
+		text-align: left;
+		background-color: #1C2263;
+		color: white;
+	}
+</style>
 <!-- bread-crumb start here -->
 <div class="bread-crumb">
 	<img src="/main_theme/images/banner-top.jpg" class="img-responsive" alt="banner-top" title="banner-top">
@@ -30,7 +59,7 @@
 						<a href="/detail/{{this.Institution.name}}/{{this.name}}/{{this.id}}">
 							<div class="box">
 								<img style="height:150px" width="100%" src="/uploads/{{this.path}}"
-									class="img-thumbnail" alt="img" title="img" />
+									class="img-thumbnail img-responsive img-resize" alt="img" title="img" />
 								<p><strong>{{this.Institution.name}}</strong></p>
 								<p>{{this.name}}</p>
 								<span>{{this.fee}}</span>
@@ -81,7 +110,7 @@
 				</div>
 				<div class="row">
 					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-						<div class="table-responsive">
+						{{!-- <div class="table-responsive">
 							<table id="example" class="display" style="width:100%">
 								<thead>
 									<tr>
@@ -94,10 +123,33 @@
 									</tr>
 								</thead>
 							</table>
-						</div>
+						</div> --}}
+						<input id="txtSearchName" placeholder="Search courses by name" type="text"
+							class="form-control" />
+						<hr>
+						<table id="customers">
+							<tr>
+								<th></th>
+								<th>Name</th>
+								<th>Tuition Fee</th>
+								<th>Degree</th>
+								<th>Faculty</th>
+								<th>Institution</th>
+							</tr>
+							<tbody id="rowContainer">
+
+							</tbody>
+
+
+						</table>
+						<hr>
+						<nav aria-label="Page navigation example">
+							<button id="btnPrev" class="btn btn-primary">Previous</button>
+							<button id="btnNext" class="btn btn-primary">Next</button> <img id="loader"
+								style="height: 30px; width:30px; visibility:hidden " src="./loader.gif" />
+							<label id="lblTotal" style="padding-right: 20px;" class="pull-right"></label>
+						</nav>
 					</div>
-
-
 				</div>
 				<hr>
 
@@ -106,76 +158,144 @@
 	</div>
 </div>
 <script>
-	$(document).ready(function () {
+	$(document).ready(function (data) {
+		//const tableRow = document.querySelector("#tableRow");
+		const btnPrev = document.querySelector("#btnPrev");
+		const btnNext = document.querySelector("#btnNext");
+		const btnSearch = document.getElementById("btnSearch");
+		const loader = document.getElementById("loader");
+		const txtSearchName = document.querySelector("#txtSearchName");
+		const lblTotal = document.querySelector("#lblTotal");
+		const LOADER_SHOW = "visible";
+		const LOADER_HIDE = "hidden";
+		const PAGE_NUM = 10;
+		let numOfSkip = 0;
+		btnNext.disabled = true;
+		btnPrev.disabled = true;
+		let offSet = 0;
 
-		var btnSearch = document.getElementById("btnSearch");
-
-
-		var cboFaculty = document.getElementById("faculty");
-		var facultyVal = cboFaculty.options[cboFaculty.selectedIndex].value;
-
-		var cboDegree = document.getElementById("degree");
-		var degreeVal = cboDegree.options[cboDegree.selectedIndex].value;
-
-		var cboInstitution = document.getElementById("institution");
-		var institutionVal = cboInstitution.options[cboInstitution.selectedIndex].value;
-		btnSearch.addEventListener("click", function () {
-			var degree = cboDegree.options[cboDegree.selectedIndex].value;
-			var faculty = facultyVal = cboFaculty.options[cboFaculty.selectedIndex].value;
-			var institution = cboInstitution.options[cboInstitution.selectedIndex].value;
-
-			callApi(degree, faculty, institution);
-		});
-		function callApi(degree, faculty, institution) {
-			
-
-			$('#example').DataTable({
-				"ajax": {
-					"url": "/courseSearch",
-					"type": "POST",
-					"data": { degreeId: degree, facultyId: faculty, institutionId: institution },
-					"dataSrc": "data"
-				},
-				"bDestroy": true,
-				"deferRender": true,
-				"columns": [
-					{
-						"data": "path",
-						"render": function (data, type, row, meta) {
-							var url = "/uploads/" + row.path;
-							data = '<img style="height:85px; width:280px" src="' + url + '" class="img-responsive"/>';
-
-							return data;
-						}
-					},
-					{
-						"data": "name",
-						"render": function (data, type, row, meta) {
-							if (type === 'display') {
-								data = "<a href='detail/school/name" + '/' + row.id + "'>" + row.name + "</a>";
-							}
-							return data;
-						}
-					},
-					{
-						"data": "fee"
-					},
-					{
-						"data": "DegreeType.name"
-					},
-					{
-						"data": "StudyArea.name"
-					},
-
-					{
-						"data": "Institution.name"
-					},
-
-				]
-			});
+		const loaderState = function (state) {
+			loader.style.visibility = state
 		}
-		callApi(degreeVal, facultyVal, institutionVal);
+		const showTotalData = function (value) {
+			let currentPageCaption;
+           
+			if (numOfSkip == 0)
+				currentPageCaption = 1;
+			else
+				currentPageCaption = (numOfSkip / PAGE_NUM) + 1;
 
+		    
+            function getRemainder(){
+				const remainder = value%PAGE_NUM;
+				let finalRemainder;
+				if(remainder >0)
+				finalRemainder = 1;
+
+				return finalRemainder;
+			}
+			const totalPage = Math.trunc(value/PAGE_NUM) + getRemainder() ;
+
+			lblTotal.innerHTML = "";
+			lblTotal.innerHTML = "Page "+ currentPageCaption+ " of " + totalPage + " ("+value+ " courses)";
+			
+		}
+		txtSearchName.addEventListener("keyup", function () {
+			loaderState(LOADER_SHOW);
+			numOfSkip = 0;
+			offSet = 0;
+			postAPI();
+		})
+		btnSearch.addEventListener("click", function () {
+			loaderState(LOADER_SHOW);
+			numOfSkip = 0;
+			offSet = 0;
+			postAPI();
+		});
+		btnNext.addEventListener("click", function (e) {
+			loaderState(LOADER_SHOW);
+			numOfSkip += PAGE_NUM;
+			offSet += PAGE_NUM;
+			postAPI();
+
+		});
+
+		btnPrev.addEventListener("click", function (e) {
+			loaderState(LOADER_SHOW);
+			numOfSkip -= PAGE_NUM;
+			offSet -= PAGE_NUM;
+			postAPI();
+		});
+		const rowContainer = document.getElementById("rowContainer");
+		const rowTemplate = function (data) {
+			rowContainer.innerHTML += `<tr id="tableRow"><td><img class="img-resize" style="height:40px; width:50px" src="/uploads/${data.path}" /></td> <td><a href="detail/school/name/${data.id}">${data.name} </a></td> <td>${data.fee}</td> <td>${data.DegreeType.name}</td> <td>${data.StudyArea.name}</td><td>${data.Institution.name}</td></tr>`;
+		}
+
+		//firstFetch();
+		function toggleBtn(resultLength) {
+
+
+			if (numOfSkip >= PAGE_NUM) {
+				btnPrev.disabled = false;
+			}
+			else {
+				btnPrev.disabled = true;
+				numOfSkip = 0;
+			}
+
+			if (resultLength < PAGE_NUM) {
+				btnNext.disabled = true;
+
+			}
+			else {
+				btnNext.disabled = false;
+
+			}
+		}
+
+		function postAPI() {
+			$.ajax({
+				url: "/courseSearch",
+				type: 'POST',
+				data: { degreeId: val().degree, facultyId: val().faculty, institutionId: val().school, offSet: offSet, searchName: val().searchName },
+				success: function (result) {
+					//showTotalData(result.total.count)
+					loaderState(LOADER_HIDE);
+					const res = result.data;
+					toggleBtn(res.length);
+
+					if (res.length > 0)
+						rowContainer.innerHTML = "";
+					for (const data of res) {
+						rowTemplate(data);
+					}
+				},
+				error: function (error) {
+					loaderState(LOADER_HIDE);
+				},
+			})
+		}
+
+		let cboFaculty = document.getElementById("faculty");
+		let facultyVal = cboFaculty.options[cboFaculty.selectedIndex].value;
+
+		let cboDegree = document.getElementById("degree");
+		let degreeVal = cboDegree.options[cboDegree.selectedIndex].value;
+
+		let cboInstitution = document.getElementById("institution");
+		let institutionVal = cboInstitution.options[cboInstitution.selectedIndex].value;
+
+
+		function val() {
+			return {
+				degree: cboDegree.options[cboDegree.selectedIndex].value,
+				school: cboDegree.options[cboDegree.selectedIndex].value,
+				faculty: facultyVal = cboFaculty.options[cboFaculty.selectedIndex].value,
+				searchName: txtSearchName.value
+			}
+		}
+
+		postAPI();
 	});
 </script>
 <!-- coures end here -->

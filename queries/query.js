@@ -296,16 +296,32 @@ module.exports = {
         include: [{ all: true }],
       });
     },
+    findAllAndCountForSearchByName: function (offs, lim, name) {
+      const offset = parseInt(offs);
+      return name
+        ? Course.findAndCountAll({
+            where: { name: { [Op.like]: `%${name}%` } },
+            offset: offset,
+            limit: lim,
+            include: [{ all: true }],
+          })
+        : Course.findAndCountAll({
+            offset: offset,
+            limit: lim,
+            include: [{ all: true }],
+          });
+    },
     findPaginated: function (offs, lim, name) {
+      const offset = parseInt(offs);
       return name
         ? Course.findAll({
             where: { name: { [Op.like]: `%${name}%` } },
-            offset: offs,
+            offset: offset,
             limit: lim,
             include: [{ all: true }],
           })
         : Course.findAll({
-            offset: offs,
+            offset: offset,
             limit: lim,
             include: [{ all: true }],
           });
@@ -345,6 +361,34 @@ module.exports = {
         where: { studyAreaId: id, institutionId: institutionId },
         include: [{ all: true }],
       });
+    },
+    findAllAndCount: function (schoolId, facultyId, degreeTypeId) {
+      let dataObj = {
+        institutionId: schoolId,
+        studyAreaId: facultyId,
+        degreeTypeId: degreeTypeId,
+      };
+      let hasValues = true;
+
+      if (facultyId == 0) {
+        delete dataObj.studyAreaId;
+      }
+      if (schoolId == 0) {
+        delete dataObj.institutionId;
+      }
+      if (degreeTypeId == 0) {
+        delete dataObj.degreeTypeId;
+      }
+
+      if (schoolId == 0 && facultyId == 0 && degreeTypeId == 0)
+        hasValues = false;
+      return hasValues
+        ? Course.findAndCountAll({
+            where: dataObj,
+          })
+        : Course.findAndCountAll({
+            include: [{ all: true }],
+          });
     },
     findByInstitutionIdSearch: function (
       schoolId,
@@ -422,7 +466,7 @@ module.exports = {
             include: [{ all: true }],
           });
     },
-    courseSearch: function (degreeTypeId, facultyId, institutionId) {
+    courseSearch: function (degreeTypeId, facultyId, institutionId, offSet) {
       let paramObj = {
         degreeTypeId: degreeTypeId,
         studyAreaId: facultyId,
@@ -435,11 +479,17 @@ module.exports = {
       if (degreeTypeId == 0 && facultyId == 0 && institutionId == 0)
         isReturnAll = true;
 
+      const offset = parseInt(offSet);
+
       return isReturnAll
         ? Course.findAll({
+            offset: offset,
+            limit: 11,
             include: [{ all: true }],
           })
         : Course.findAll({
+            offset: offset,
+            limit: 11,
             where: paramObj,
             include: [{ all: true }],
           });

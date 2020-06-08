@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     roleId: DataTypes.BOOLEAN,
     username: DataTypes.STRING,
     photo: DataTypes.STRING,
+    phone: DataTypes.STRING,
     resetPasswordToken: DataTypes.STRING,
     resetPasswordExpires: DataTypes.STRING,
     pushId: DataTypes.STRING,

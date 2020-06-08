@@ -178,7 +178,19 @@
                       class="icon-name">edit</span></a></td>
                 {{/if}}
               </tr>
-
+              <tr class="active">
+                <th scope="row">Contact Email:</th>
+                <td>
+                  <input id="99" disabled type="text" name="contactEmail" value="{{app.contactEmail}}"
+                    class="form-control mobile-phone-number" placeholder="" required>
+                </td>
+                {{#if user.roleId}}
+                <td></td>
+                {{else}}
+                <td><a onclick="return toggleEditMode('99')" href=""><i class="material-icons">edit</i> <span
+                      class="icon-name">edit</span></a></td>
+                {{/if}}
+              </tr>
 
               <tr class="active">
                 <th scope="row">Highest qualification:</th>
@@ -898,7 +910,7 @@
     doc.text(20, 190, 'PHONE');
 
     doc.setFontSize(12);
-    doc.text(20, 200, '{{app.phone}}');
+    doc.text(20, 200, '{{app.phone}}     Email:{{app.contactEmail}}');
 
     doc.setFontSize(13)
     doc.text(20, 210, 'HIGHEST QUALIFICATION');

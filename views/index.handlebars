@@ -1,30 +1,30 @@
-
+<title>Study In Scotland | Scot-Study</title>
 <script src="/skdslider/src/skdslider.min.js"></script>
-	<link href="/skdslider/src/skdslider.css" rel="stylesheet">
-	<script type="text/javascript">
-		jQuery(document).ready(function () {
-			
-			jQuery('#demo1').skdslider({
-				slideSelector: '.slide',
-				delay: 5000,
-				animationSpeed: 2000,
-				showNextPrev: false,
-				showPlayButton: false,
-				autoSlide: true,
-				animationType: 'fading'
-			});
+<link href="/skdslider/src/skdslider.css" rel="stylesheet">
+<script type="text/javascript">
+	jQuery(document).ready(function () {
 
-			jQuery('#demo2').skdslider({
-				slideSelector: '.slide',
-				delay: 5000,
-				animationSpeed: 1000,
-				showNextPrev: false,
-				showPlayButton: false,
-				autoSlide: true,
-				animationType: 'sliding'
-			});
+		jQuery('#demo1').skdslider({
+			slideSelector: '.slide',
+			delay: 5000,
+			animationSpeed: 2000,
+			showNextPrev: false,
+			showPlayButton: false,
+			autoSlide: true,
+			animationType: 'fading'
 		});
-	</script>
+
+		jQuery('#demo2').skdslider({
+			slideSelector: '.slide',
+			delay: 5000,
+			animationSpeed: 1000,
+			showNextPrev: false,
+			showPlayButton: false,
+			autoSlide: true,
+			animationType: 'sliding'
+		});
+	});
+</script>
 <style>
 	@media only screen and (max-width: 768px) {
 		.d-block {
@@ -63,28 +63,12 @@
 				<div id="demo1">
 					{{#each banner}}
 					<div class="slide">
-						<img src="/uploads/{{this.path}}" />
-						<!--Slider Description example-->
-						
+						<img class="img-responsive img-resize" src="/uploads/{{this.path}}" />
+
 					</div>
 					{{/each}}
 				</div>
-				{{!-- <div id="carouselSlidesOnly" class="carouselBanner slide" data-ride="carousel">
-					<div class="carousel-inner">
-						<div class="item active">
-							<img  src="/uploads/scotstudyBanner.jpg">
-						</div>
-						{{#each banner}}
-						<div class="item">
-							<img style="height:400px" src="/uploads/{{this.path}}">
-							<div class="carousel-caption">
-						
-							</div>
-						</div>
-						{{/each}}
-
-					</div>
-				</div> --}}
+				
 			</div>
 		</div>
 	</div>
@@ -101,25 +85,7 @@
 			<div class="aboutweek">
 				<div class="container">
 					<div class="row">
-						{{!-- <div class="col-lg-12 col-md-12 col-sm-12"
-							style="border:1px solid #000; background-color:rgb(193, 193, 212)">
-							<div style="text-align:center">
-								<div class="row">
-									<div class="col-lg-3 col-md-3"></div>
-									<div class="col-lg-6 col-md-6">
-										<h1 style="font-size:60px; text-align:center"><strong>Simple
-												Process</strong>
-										</h1>"... take full charge of your future"
-									</div>
-									<div class="col-lg-3 col-md-3">
-										<button style="margin:15%" class="btn btn-primary"
-											onclick="window.location.href = '/user/login';" id="btnReg"
-											type="button">APPLY
-											NOW</button>
-									</div>
-								</div>
-							</div>
-						</div> --}}
+						
 						<div style="text-align:center">
 							<div class="col-lg-4"><a target="_blank"
 									href="https://play.google.com/store/apps/details?id=io.scotStudy.softnergylimited&hl=en">
@@ -133,8 +99,9 @@
 									id="btnReg" type="button">APPLY
 									NOW</button>
 							</div>
-							<div class="col-lg-4"><a target="_blank" href="https://apps.apple.com/us/app/scot-study/id1507593447?ls=1"><img src="/ios.png" class="pull-right hidden-xs" alt="img"
-									title="img" /></a>
+							<div class="col-lg-4"><a target="_blank"
+									href="https://apps.apple.com/us/app/scot-study/id1507593447?ls=1"><img
+										src="/ios.png" class="pull-right hidden-xs" alt="img" title="img" /></a>
 							</div>
 
 						</div>
@@ -148,7 +115,7 @@
 						<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 box text-center">
 							<div class="icons">
 								<div class="icon">
-									<img src="/main_theme/images/user_awake.png" class="img-responsive" alt="icon"
+									<img src="/main_theme/images/user_awake.png" class="img-responsive" alt="Scholarship in the UK for Africans"
 										title="icon" />
 								</div>
 							</div>
@@ -159,7 +126,7 @@
 						<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 box text-center">
 							<div class="icons">
 								<div class="icon">
-									<img src="/main_theme/images/notepad.png" class="img-responsive" alt="icon"
+									<img src="/main_theme/images/notepad.png" class="img-responsive" alt="Cheap universities in UK"
 										title="icon" />
 								</div>
 							</div>
@@ -170,7 +137,7 @@
 						<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 box text-center">
 							<div class="icons">
 								<div class="icon">
-									<img src="/main_theme/images/binoculars2.png" class="img-responsive" alt="icon"
+									<img src="/main_theme/images/binoculars2.png" class="img-responsive" alt="Find Scholarship In Scotland"
 										title="icon" />
 								</div>
 							</div>
@@ -184,7 +151,7 @@
 						<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 box text-center">
 							<div class="icons">
 								<div class="icon">
-									<img src="/main_theme/images/support.png" class="img-responsive" alt="icon"
+									<img src="/main_theme/images/support.png" class="img-responsive" alt="Study In Edinburgh"
 										title="icon" />
 								</div>
 							</div>
@@ -195,7 +162,7 @@
 						<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 box text-center">
 							<div class="icons">
 								<div class="icon">
-									<img src="/main_theme/images/paper_plane.png" class="img-responsive" alt="icon"
+									<img src="/main_theme/images/paper_plane.png" class="img-responsive" alt="List of cheap courses in the UK"
 										title="icon" />
 								</div>
 							</div>
@@ -226,10 +193,12 @@
 		<div class="row">
 			<div class="col-xs-6"><a target="_blank"
 					href="https://play.google.com/store/apps/details?id=io.scotStudy.softnergylimited&hl=en">
-					<img src="/scotia-android.png" class="pull-left hidden-lg hidden-md hidden-sm" alt="img" title="img" /></a>
+					<img src="/scotia-android.png" class="pull-left hidden-lg hidden-md hidden-sm" alt="img"
+						title="img" /></a>
 			</div>
-			
-			<div class="col-xs-6"><img src="/ios.png" class="pull-right hidden-lg hidden-md hidden-sm" alt="img" title="img" />
+
+			<div class="col-xs-6"><img src="/ios.png" class="pull-right hidden-lg hidden-md hidden-sm" alt="img"
+					title="img" />
 			</div>
 		</div>
 	</div>
@@ -251,28 +220,6 @@
 					</div>
 					{{/each}}
 				</div>
-				{{!-- <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
-					<div class="carousel-inner">
-						<div class="item active">
-							<img class="d-block w-100" src="/uploads/first_slider.jpg">
-							<div class="carousel-caption">
-							</div>
-						</div>
-						
-						{{#each schools}}
-						<div class="item">
-							<img class="d-block w-100" src="/uploads/{{this.banner}}">
-							<div class="carousel-caption">
-								<h3 style="background-color:#000">{{this.name}}</h3>
-								<p class="hidden-xs" style="background-color:#000; font-size:10px">{{this.sellingPoint}}
-								</p>
-							</div>
-						</div>
-						{{/each}}
-
-					</div>
-				</div> --}}
-
 			</div>
 		</div>
 	</div>
@@ -301,11 +248,11 @@
 							<div class="image">
 								<a href="#">
 									{{#if this.path}}
-									<img style="height:150px" src="/uploads/{{this.path}}" class="img-responsive"
-										alt="img" title="img" />
+									<img style="height:150px" src="/uploads/{{this.path}}" class="img-responsive img-resize"
+										alt="Study in Glasgow" title="img" />
 									{{else}}
-									<img style="height:150px" src="/main_theme/images/course.png" class="img-responsive"
-										alt="img" title="img" />
+									<img style="height:150px" src="/main_theme/images/course.png" class="img-responsive img-resize"
+										alt="Study agency in Scotland" title="img" />
 									{{/if}}
 								</a>
 							</div>
@@ -333,8 +280,8 @@
 						<div class="product-thumb">
 							<div class="image">
 								<a href="/popular-Courses">
-									<img style="height:190px" src="/uploads/direction.jpg" class="img-responsive"
-										alt="img" title="img" />
+									<img style="height:190px" src="/uploads/direction.jpg" class="img-responsive img-resize"
+										alt="Scholarship in the UK for Africans" title="img" />
 								</a>
 							</div>
 							<div class="caption">
@@ -349,7 +296,7 @@
 	</div>
 </div>
 <!-- courses end here -->
-<div class="course">
+<div style="margin-top:-100px" class="course">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12 col-xs-12">
@@ -413,24 +360,26 @@
 			<div class="clearfix"></div>
 			<!-- Set up your HTML -->
 			<div class="owl-carousel">
-				<div> <img style="height:150px" src="/sponsors/scotia-world.jpg" class="img-thumbnail" alt="img" title="img" />
+				<div> <img style="height:150px" src="/sponsors/scotia-world.jpg" class="img-thumbnail img-responsive img-resize" alt="img"
+						title="img" />
 				</div>
-				<div> <img style="height:150px" src="/sponsors/swie.jpg" class="img-thumbnail" alt="img" title="img" />
+				<div> <img style="height:150px" src="/sponsors/swie.jpg" class="img-thumbnail img-responsive img-resize" alt="img" title="img" />
 				</div>
 
 				<div> <img style="height:150px"
-						src="/sponsors/british-high-commission-nicosia-logo-120160517124722_l.jpg" class="img-thumbnail"
+						src="/sponsors/british-high-commission-nicosia-logo-120160517124722_l.jpg" class="img-thumbnail img-responsive img-resize"
 						alt="img" title="img" /> </div>
 
-				<div> <img style="height:150px" src="/sponsors/higherEducation.jpg" class="img-thumbnail" alt="img"
+				<div> <img style="height:150px" src="/sponsors/higherEducation.jpg" class="img-thumbnail img-responsive img-resize" alt="img"
 						title="img" /></div>
 
 
 
-				<div> <img style="height:150px" src="/sponsors/ukvi.jpg" class="img-thumbnail" alt="img" title="img" />
+				<div> <img style="height:150px" src="/sponsors/ukvi.jpg" class="img-thumbnail img-responsive img-resize" alt="img" title="img" />
 				</div>
 
-				<div> <img style="height:150px" src="/sponsors/BritishCouncil.jpg" class="img-thumbnail" alt="img" title="img" />
+				<div> <img style="height:150px" src="/sponsors/BritishCouncil.jpg" class="img-thumbnail img-responsive img-resize" alt="img"
+						title="img" />
 				</div>
 
 			</div>
