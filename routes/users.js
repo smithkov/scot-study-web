@@ -46,7 +46,7 @@ var myClient = new OneSignal.Client({
 // Register
 router.get("/register", async function (req, res) {
   let country = await Country.findAll();
-  res.render("register",{country:country});
+  res.render("register", { country: country });
 });
 
 router.get("/photo", ensureAuthenticated, function (req, res) {
@@ -142,57 +142,74 @@ router.post("/mobileLogin", async function (req, res) {
           token: null,
         });
       }
+    }else{
+      res.json({
+        success: false,
+        user: null,
+        message: "Authentication failed!",
+        token: null,
+      });
     }
   });
 });
 router.post("/mobileRegister", async function (req, res) {
-  var email = req.body.email;
-  var username = req.body.username;
-  var password = req.body.password;
+  try {
+    var email = req.body.email;
+    var username = req.body.username;
+    var phone = req.body.phone;
+    var password = req.body.password;
 
-  var message = "";
-  var newUser = {
-    email: email,
-    username: username,
-    password: password,
-    roleId: false,
-  };
+    var message = "";
+    var newUser = {
+      email: email,
+      username: username,
+      password: password,
+      phone: phone,
+      roleId: false,
+    };
 
-  //checking for email and username are already taken
-  let mailExist = await User.findOne({ where: { email: email } });
-  let userExist = await User.findOne({ where: { username: username } });
-  if (!mailExist && !userExist) {
-    bcrypt.genSalt(4, function (err, salt) {
-      bcrypt.hash(newUser.password, salt, function (err, hash) {
-        newUser.password = hash;
-        // create that user as no one by that username exists
-        User.create(newUser).then(function (user) {
-          if (user) {
-            let token = jwt.sign({ username: username }, process.env.secret, {
-              expiresIn: "24h", // expires in 24 hours
-            });
+    //checking for email and username are already taken
+    let mailExist = await User.findOne({ where: { email: email } });
+    let userExist = await User.findOne({ where: { username: username } });
+    if (!mailExist && !userExist) {
+      bcrypt.genSalt(4, function (err, salt) {
+        bcrypt.hash(newUser.password, salt, function (err, hash) {
+          newUser.password = hash;
+          // create that user as no one by that username exists
+          User.create(newUser).then(function (user) {
+            if (user) {
+              let token = jwt.sign({ username: username }, process.env.secret, {
+                expiresIn: "24h", // expires in 24 hours
+              });
 
-            res.json({
-              success: true,
-              message: "Registration Successful!",
-              token: token,
-              user: user,
-            });
-          }
+              res.json({
+                success: true,
+                message: "Registration Successful!",
+                token: token,
+                user: user,
+              });
+            }
+          });
         });
       });
-    });
-  } else if (mailExist) {
-    // there's already someone with that username
+    } else if (mailExist) {
+      // there's already someone with that username
+      res.json({
+        success: false,
+        message: "Email already exist!",
+        token: null,
+      });
+    } else if (userExist) {
+      res.json({
+        success: false,
+        message: "Username already exist!",
+        token: null,
+      });
+    }
+  } catch (err) {
     res.json({
       success: false,
-      message: "Email already exist!",
-      token: null,
-    });
-  } else if (userExist) {
-    res.json({
-      success: false,
-      message: "Username already exist!",
+      message: "Registration was not successful. Please try again later.",
       token: null,
     });
   }
@@ -291,7 +308,7 @@ router.post("/register", async function (req, res) {
   var newUser = {
     email: email,
     username: username,
-    phone:phone,
+    phone: phone,
     password: password,
     roleId: false,
   };
@@ -633,7 +650,11 @@ router.post("/sendMessage", async (req, res) => {
   });
 });
 
-router.get("/all", ensureAuthenticated, isAdmin, async function (req, res, next) {
+router.get("/all", ensureAuthenticated, isAdmin, async function (
+  req,
+  res,
+  next
+) {
   let id = 0;
   const findUsers = await Query.User.findAll();
   const getUsers = findUsers.map((user) => {

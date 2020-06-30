@@ -768,7 +768,7 @@
                   {{/if}}
                 </td>
                 {{#if user.roleId}}
-                
+
                 {{!-- {{else}}
                 <td><a onclick="return toggleEditMode('isUpload')" href=""><i class="material-icons">edit</i> <span
                       class="icon-name">edit</span></a></td> --}}
@@ -796,14 +796,15 @@
             <label for="basic_checkbox_3">Application Submitted </label>
           </div>
           <div class="form-group form-float">
-            <label>Decision Status</label>
+            <label>Current Decision Status: {{app.decision}}</label>
             <div class="form-line">
               <select class='form-control' id="cboDecision" name="decision" required>
-                {{#if app.decision}}
+                {{!-- {{#if app.decision}}
                 <option value='{{app.decision}}'>{{app.decision}}</option>
                 {{else}}
                 <option value=''>--Select--</option>
-                {{/if}}
+                {{/if}} --}}
+                <option value='Pending'>Pending</option>
                 <option value='Conditional Offer'>Conditional Offer</option>
                 <option value='Unconditional Offer'>Unconditional Offer</option>
                 <option value='Application Rejected'>Application Rejected</option>
@@ -853,7 +854,7 @@
   function toPdf() {
 
 
-    
+
     var doc = new jsPDF()
     doc.setFontSize(26)
     doc.text(20, 20, 'APPLICATION FORM');
@@ -867,7 +868,7 @@
     doc.text(20, 50, 'FULL NAME');
 
     doc.setFontSize(12);
-    doc.text(20, 60,fullname );
+    doc.text(20, 60, fullname);
 
 
     doc.setFontSize(13)
@@ -899,12 +900,12 @@
 
     doc.setFontSize(12);
     doc.text(20, 160, '{{app.homeAddress}}');
- 
+
     doc.setFontSize(13)
     doc.text(20, 170, 'POSTAL ADDRESS');
 
     doc.setFontSize(12);
-    doc.text(20, 180, '{{app.postalAddress}}'?'{{app.postalAddress}}':"No Postal Address");
+    doc.text(20, 180, '{{app.postalAddress}}' ? '{{app.postalAddress}}' : "No Postal Address");
 
     doc.setFontSize(13)
     doc.text(20, 190, 'PHONE');
@@ -1007,7 +1008,7 @@
 
 
 
-    doc.save(fullname+ new Date() +'.pdf')
+    doc.save(fullname + new Date() + '.pdf')
   }
   function toggleEditMode(id) {
     if (id == "isUpload") {

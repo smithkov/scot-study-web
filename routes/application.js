@@ -300,8 +300,8 @@ router.get("/hide/:id", ensureAuthenticated, async (req, res, next) => {
   try {
     let id = req.params.id;
     const getApplication = await Query.Application.findById(id);
-    if(getApplication)
-    await Query.Application.update({hasDeleted:true}, id);
+    if (getApplication)
+      await Query.Application.update({ hasDeleted: true }, id);
   } catch (err) {
     console.log(err);
   } finally {
@@ -405,7 +405,7 @@ router.post(
       credential: img,
       moreInfo: moreInfo,
       hasSubmitted: true,
-      decision: "PENDING",
+      decision: "Pending",
     };
 
     let getApplication = await Query.Application.findByUser(userId);
@@ -425,7 +425,11 @@ router.post(
   }
 );
 
-router.post("/decision", ensureAuthenticated,isAdmin, function (req, res, next) {
+router.post("/decision", ensureAuthenticated, isAdmin, function (
+  req,
+  res,
+  next
+) {
   let applicationId = req.body.id;
   //let userId = req.body.userId;
   var decision = req.body.decision;
@@ -503,38 +507,33 @@ router.post("/form1", ensureAuthenticated, function (req, res, next) {
 });
 
 router.post("/mobileForm1", async function (req, res, next) {
-  var dataObject;
-
-  let isError = false;
   let userId = req.body.userId;
-
-  var firstname = req.body.firstname;
-  var middlename = req.body.middlename;
-  var lastname = req.body.lastname;
-  var courseId = req.body.courseId;
-  var getCourseById = await Query.Course.findById(courseId);
-  console.log(
-    "----------------------------------------------------------------------"
-  );
-  console.log(courseId);
-  console.log(
-    "----------------------------------------------------------------------"
-  );
-  var course1 = getCourseById.name;
-  var course2 = getCourseById.name;
-  var level = getCourseById.DegreeType.name;
-  var cityOfChoice = getCourseById.Institution.CityId;
-  var schoolWish1 = getCourseById.Institution.name;
-  var schoolWish2 = getCourseById.Institution.name;
-  var dob = req.body.dob;
-  var gender = req.body.gender;
-  var marital = req.body.marital;
-
-  let applicationId = req.body.id;
-
-  var countryId = await Country.findByName(req.body.countryId);
-
+  
   try {
+    var dataObject;
+
+    let isError = false;
+
+    var firstname = req.body.firstname;
+    var middlename = req.body.middlename;
+    var lastname = req.body.lastname;
+    var courseId = req.body.courseId;
+    var getCourseById = await Query.Course.findById(courseId);
+
+    var course1 = getCourseById.name;
+    var course2 = getCourseById.name;
+    var level = getCourseById.DegreeType.name;
+    var cityOfChoice = getCourseById.Institution.CityId;
+    var schoolWish1 = getCourseById.Institution.name;
+    var schoolWish2 = getCourseById.Institution.name;
+    var dob = req.body.dob;
+    var gender = req.body.gender;
+    var marital = req.body.marital;
+
+    let applicationId = req.body.id;
+
+    var countryId = await Country.findByName(req.body.countryId);
+
     var newApplication = {
       firstname: firstname,
       userId: userId,
@@ -557,17 +556,21 @@ router.post("/mobileForm1", async function (req, res, next) {
     } else {
       dataObject = await Application.create(newApplication);
     }
+    let getApplication = await Query.Application.findByUser(userId);
+    //let getApplication = await Query.Application.findByUser(userId);
+    //req.flash('success_msg', 'Application save successfully');
+    return res.send({
+      error: isError,
+      message: apiMsg(isError),
+      app: getApplication,
+    });
   } catch (err) {
-    isError = true;
+    return res.send({
+      error: true,
+      message: apiMsg(true),
+      app: null,
+    });
   }
-
-  let getApplication = await Query.Application.findByUser(userId);
-  //req.flash('success_msg', 'Application save successfully');
-  return res.send({
-    error: isError,
-    message: apiMsg(isError),
-    app: getApplication,
-  });
 });
 
 router.post("/form2", ensureAuthenticated, function (req, res, next) {
@@ -615,16 +618,19 @@ router.post("/form2", ensureAuthenticated, function (req, res, next) {
 });
 
 router.post("/mobileForm2", async function (req, res, next) {
-  var dataObject;
-  var homeAddress = req.body.homeAddress;
-  var postalAddress = req.body.postalAddress;
-  var phone = req.body.phone;
-  var contactEmail = req.body.contactEmail;
-  var applicationId = req.body.id;
   let userId = req.body.userId;
-
-  let isError = false;
+  let getApplication = await Query.Application.findByUser(userId);
+  
   try {
+    var dataObject;
+    var homeAddress = req.body.homeAddress;
+    var postalAddress = req.body.postalAddress;
+    var phone = req.body.phone;
+    var contactEmail = req.body.contactEmail;
+    var applicationId = req.body.id;
+
+    let isError = false;
+
     var newApplication = {
       userId: userId,
       homeAddress: homeAddress,
@@ -639,15 +645,19 @@ router.post("/mobileForm2", async function (req, res, next) {
     } else {
       dataObject = await Application.create(newApplication);
     }
+
+    return res.send({
+      error: isError,
+      message: apiMsg(isError),
+      app: getApplication,
+    });
   } catch (err) {
-    isError = true;
+    return res.send({
+      error: true,
+      message: apiMsg(true),
+      app: getApplication,
+    });
   }
-  let getApplication = await Query.Application.findByUser(userId);
-  return res.send({
-    error: isError,
-    message: apiMsg(isError),
-    app: getApplication,
-  });
 });
 
 router.put("/removeApplication/:id", async function (req, res, next) {
@@ -722,25 +732,26 @@ router.post("/form3", ensureAuthenticated, function (req, res, next) {
 });
 
 router.post("/mobileForm3", async function (req, res, next) {
-  var dataObject;
-  var applicationId = req.body.id;
-  let isError = false;
-  var hQualification = req.body.hQualification;
-  var hGrade = req.body.hGrade;
-  var hSchoolName = req.body.hSchoolName;
-  var hCompleted = req.body.hCompleted;
-  var hProgrammeYear = req.body.hProgrammeYear;
-  var pQualification = req.body.pQualification;
-  var pGrade = req.body.pGrade;
-  var pSchoolName = req.body.pSchoolName;
-  var pCompleted = req.body.pCompleted;
-  var pProgrammeYear = req.body.pProgrammeYear;
-  var highSchoolName = req.body.highSchoolName;
-  var completionYr = req.body.completionYr;
-  var englishTest = req.body.englishTest;
   let userId = req.body.userId;
-
+  let getApplication = await Query.Application.findByUser(userId);
   try {
+    var dataObject;
+    var applicationId = req.body.id;
+    let isError = false;
+    var hQualification = req.body.hQualification;
+    var hGrade = req.body.hGrade;
+    var hSchoolName = req.body.hSchoolName;
+    var hCompleted = req.body.hCompleted;
+    var hProgrammeYear = req.body.hProgrammeYear;
+    var pQualification = req.body.pQualification;
+    var pGrade = req.body.pGrade;
+    var pSchoolName = req.body.pSchoolName;
+    var pCompleted = req.body.pCompleted;
+    var pProgrammeYear = req.body.pProgrammeYear;
+    var highSchoolName = req.body.highSchoolName;
+    var completionYr = req.body.completionYr;
+    var englishTest = req.body.englishTest;
+
     var newApplication = {
       userId: userId,
       hQualification: hQualification,
@@ -765,15 +776,19 @@ router.post("/mobileForm3", async function (req, res, next) {
     } else {
       dataObject = Application.create(newApplication);
     }
+
+    return res.send({
+      error: isError,
+      message: apiMsg(isError),
+      app: getApplication,
+    });
   } catch (err) {
-    isError = true;
+    return res.send({
+      error: true,
+      message: apiMsg(true),
+      app: getApplication,
+    });
   }
-  let getApplication = await Query.Application.findByUser(userId);
-  return res.send({
-    error: isError,
-    message: apiMsg(isError),
-    app: getApplication,
-  });
 });
 
 router.post("/form4", ensureAuthenticated, function (req, res, next) {
@@ -792,12 +807,12 @@ router.post("/form4", ensureAuthenticated, function (req, res, next) {
 
   var newApplication = {
     userId: req.user.id,
-    cityId:city,
-    course1 :course1,
+    cityId: city,
+    course1: course1,
     course2: course2,
-    schoolWish1:schoolWish1,
-    schoolWish2:schoolWish2,
-    level:level,
+    schoolWish1: schoolWish1,
+    schoolWish2: schoolWish2,
+    level: level,
     sponsor: sponsor,
     sponsorName: sponsorName,
     sponsorOccupation: sponsorOccupation,
@@ -815,16 +830,18 @@ router.post("/form4", ensureAuthenticated, function (req, res, next) {
 });
 
 router.post("/mobileForm4", async function (req, res, next) {
-  var dataObject;
-  var applicationId = req.body.id;
-
-  var sponsor = req.body.sponsor;
-  var sponsorName = req.body.sponsorName;
-  var sponsorOccupation = req.body.sponsorOccupation;
-  var budget = req.body.budget;
-  let isError = false;
   let userId = req.body.userId;
+  let getApplication = await Query.Application.findByUser(userId);
   try {
+    var dataObject;
+    var applicationId = req.body.id;
+
+    var sponsor = req.body.sponsor;
+    var sponsorName = req.body.sponsorName;
+    var sponsorOccupation = req.body.sponsorOccupation;
+    var budget = req.body.budget;
+    let isError = false;
+
     var newApplication = {
       userId: userId,
       sponsor: sponsor,
@@ -839,23 +856,28 @@ router.post("/mobileForm4", async function (req, res, next) {
     } else {
       dataObject = await Application.create(newApplication);
     }
-  } catch (err) {
-    isError = true;
-  }
-  let getApplication = await Query.Application.findByUser(userId);
 
-  return res.send({
-    error: isError,
-    message: apiMsg(isError),
-    app: getApplication,
-  });
+    return res.send({
+      error: isError,
+      message: apiMsg(isError),
+      app: getApplication,
+    });
+  } catch (err) {
+    return res.send({
+      error: true,
+      message: apiMsg(true),
+      app: getApplication,
+    });
+  }
 });
 router.post("/mobileForm6", config.cpUpload2, async function (req, res, next) {
-  var dataObject;
-  let isError = false;
-  let applicationId = req.body.id;
   let userId = req.body.userId;
+  let getApplication = await Query.Application.findByUser(userId);
   try {
+    var dataObject;
+    let isError = false;
+    let applicationId = req.body.id;
+
     let img =
       req.files["credential"] === undefined
         ? ""
@@ -870,48 +892,61 @@ router.post("/mobileForm6", config.cpUpload2, async function (req, res, next) {
     } else {
       dataObject = await Application.create(newApplication);
     }
-  } catch (err) {
-    isError = true;
-  }
-  let getApplication = await Query.Application.findByUser(userId);
 
-  return res.send({
-    error: isError,
-    message: apiMsg(isError),
-    app: getApplication,
-  });
+    return res.send({
+      error: isError,
+      message: apiMsg(isError),
+      app: getApplication,
+    });
+  } catch (err) {
+    return res.send({
+      error: true,
+      message: apiMsg(true),
+      app: getApplication,
+    });
+  }
 });
 
 router.post("/mobileSubmission", async function (req, res, next) {
-  var dataObject;
-  let isError = false;
-  let applicationId = req.body.id;
   let userId = req.body.userId;
-
-  let newApplication = {
-    userId: userId,
-    id: applicationId,
-    hasSubmitted: true,
-    decision: "PENDING",
-  };
   let getApplication = await Query.Application.findByUser(userId);
-  if (applicationId) {
-    newApplication.id = applicationId;
-    dataObject = await Application.update(newApplication, applicationId);
-    mail.send(
-      getApplication.contactEmail,
-      mail.applicationSubject(),
-      mail.messageForAppSubmission(getApplication.firstname)
-    );
-  } else {
-    isError = true;
-  }
 
-  return res.send({
-    error: isError,
-    message: apiMsg(isError),
-    app: getApplication,
-  });
+  try {
+    var dataObject;
+    let isError = false;
+    let applicationId = req.body.id;
+
+    let newApplication = {
+      userId: userId,
+      id: applicationId,
+      hasSubmitted: true,
+      decision: "Pending",
+    };
+
+    if (applicationId) {
+      newApplication.id = applicationId;
+      dataObject = await Application.update(newApplication, applicationId);
+      mail.send(
+        getApplication.contactEmail,
+        mail.applicationSubject(),
+        mail.messageForAppSubmission(getApplication.firstname)
+      );
+    } else {
+      isError = true;
+    }
+
+    return res.send({
+      error: isError,
+      message: apiMsg(isError),
+      app: getApplication,
+    });
+  } catch (err) {
+    return res.send({
+      error: true,
+      message: apiMsg(true),
+      app: getApplication,
+    });
+  }
 });
 
 router.post("/form5", config.cpUpload2, ensureAuthenticated, function (
@@ -950,58 +985,63 @@ router.post("/form5", config.cpUpload2, ensureAuthenticated, function (
 });
 
 router.post("/mobileForm5", async function (req, res) {
-  var dataObject;
-  let applicationId = req.body.id;
-  let hasApplied = req.body.hasApplied;
-  let purpose = req.body.purpose;
-  let reasonOfRefusal = req.body.reasonOfRefusal;
-  let isError = false;
-  let moreInfo = req.body.moreInfo;
   let userId = req.body.userId;
-
-  var courseId = req.body.courseId;
-  var getCourseById = await Query.Course.findById(courseId);
-  var course1 = getCourseById.name;
-  var course2 = getCourseById.name;
-  var level = getCourseById.DegreeType.name;
-  var cityOfChoice = getCourseById.Institution.CityId;
-  var schoolWish1 = getCourseById.Institution.name;
-  var schoolWish2 = getCourseById.Institution.name;
-
-  let newApplication = {
-    userId: userId,
-    hasApplied: hasApplied,
-    purpose: purpose,
-    reasonOfRefusal: reasonOfRefusal,
-    moreInfo: moreInfo,
-    course2: course2,
-    course1: course1,
-    level: level,
-    cityId: cityOfChoice,
-    schoolWish1: schoolWish1,
-    schoolWish2: schoolWish2,
-    courseId: courseId,
-    //hasSubmitted: true,
-    //decision: "PENDING"
-  };
-
-  if (applicationId) {
-    newApplication.id = applicationId;
-
-    dataObject = await Application.update(newApplication, applicationId);
-  } else {
-    dataObject = await Application.create(newApplication);
-  }
-
   let getApplication = await Query.Application.findByUser(userId);
+  try {
+    var dataObject;
+    let applicationId = req.body.id;
+    let hasApplied = req.body.hasApplied;
+    let purpose = req.body.purpose;
+    let reasonOfRefusal = req.body.reasonOfRefusal;
+    let isError = false;
+    let moreInfo = req.body.moreInfo;
 
-  return res.send({
-    error: isError,
-    message: apiMsg(isError),
-    app: getApplication,
-  });
+    var courseId = req.body.courseId;
+    var getCourseById = await Query.Course.findById(courseId);
+    var course1 = getCourseById.name;
+    var course2 = getCourseById.name;
+    var level = getCourseById.DegreeType.name;
+    var cityOfChoice = getCourseById.Institution.CityId;
+    var schoolWish1 = getCourseById.Institution.name;
+    var schoolWish2 = getCourseById.Institution.name;
+
+    let newApplication = {
+      userId: userId,
+      hasApplied: hasApplied,
+      purpose: purpose,
+      reasonOfRefusal: reasonOfRefusal,
+      moreInfo: moreInfo,
+      course2: course2,
+      course1: course1,
+      level: level,
+      cityId: cityOfChoice,
+      schoolWish1: schoolWish1,
+      schoolWish2: schoolWish2,
+      courseId: courseId,
+      //hasSubmitted: true,
+      //decision: "Pending"
+    };
+
+    if (applicationId) {
+      newApplication.id = applicationId;
+
+      dataObject = await Application.update(newApplication, applicationId);
+    } else {
+      dataObject = await Application.create(newApplication);
+    }
+
+    return res.send({
+      error: isError,
+      message: apiMsg(isError),
+      app: getApplication,
+    });
+  } catch (err) {
+    return res.send({
+      error: true,
+      message: apiMsg(true),
+      app: getApplication,
+    });
+  }
 });
-
-
 
 module.exports = router;

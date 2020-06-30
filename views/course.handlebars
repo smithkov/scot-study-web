@@ -254,6 +254,7 @@
 		}
 
 		function postAPI() {
+			
 			$.ajax({
 				url: "/courseSearch",
 				type: 'POST',
@@ -289,8 +290,8 @@
 		function val() {
 			return {
 				degree: cboDegree.options[cboDegree.selectedIndex].value,
-				school: cboDegree.options[cboDegree.selectedIndex].value,
-				faculty: facultyVal = cboFaculty.options[cboFaculty.selectedIndex].value,
+				school: cboInstitution.options[cboInstitution.selectedIndex].value,
+				faculty:  cboFaculty.options[cboFaculty.selectedIndex].value,
 				searchName: txtSearchName.value
 			}
 		}
