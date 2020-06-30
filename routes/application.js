@@ -42,9 +42,6 @@ router.post("/mobileStep1", async function (req, res, next) {
   let getCourse = application
     ? await Query.Course.findById(application.courseId)
     : "";
-  console.log("getCourse---------------------------------");
-  console.log(currentUserId);
-  console.log("getCourse---------------------------------");
   return res.send({
     //courses: course,
     quali: quali,
@@ -909,7 +906,7 @@ router.post("/mobileForm6", config.cpUpload2, async function (req, res, next) {
 
 router.post("/mobileSubmission", async function (req, res, next) {
   let userId = req.body.userId;
-  let getApplication = await Query.Application.findByUser(userId);
+  
 
   try {
     var dataObject;
@@ -934,13 +931,14 @@ router.post("/mobileSubmission", async function (req, res, next) {
     } else {
       isError = true;
     }
-
+    let getApplication = await Query.Application.findByUser(userId);
     return res.send({
       error: isError,
       message: apiMsg(isError),
       app: getApplication,
     });
   } catch (err) {
+    let getApplication = await Query.Application.findByUser(userId);
     return res.send({
       error: true,
       message: apiMsg(true),
