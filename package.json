@@ -45,7 +45,7 @@
     "passport": "^0.4.1",
     "passport-http": "*",
     "passport-local": "*",
-    "read-excel-file": "^4.0.5",
+    "read-excel-file": "^5.5.0",
     "sequelize": "^5.21.5",
     "sequelize-cli": "^5.5.1",
     "serve-favicon": "^2.5.0",
